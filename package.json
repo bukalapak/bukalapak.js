@@ -1,0 +1,24 @@
+{
+  "name": "bukalapak.js",
+  "version": "0.0.0",
+  "description": "Bukalapak API v4 javascript wrapper",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bukalapak/bukalapak.js.git"
+  },
+  "author": "Alif Rachmawadi <subosito@bukalapak.com>",
+  "license": "MIT",
+  "dependencies": {
+    "isomorphic-fetch": "^2.2.1",
+    "es6-promise": "^2.3.0"
+  },
+  "devDependencies": {
+    "jshint": "^2.9.1",
+    "chai": "^3.5.0",
+    "mocha": "^2.4.5"
+  }
+}
