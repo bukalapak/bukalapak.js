@@ -4,7 +4,9 @@
   "description": "Bukalapak API v4 javascript wrapper",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "build": "babel src -d lib",
+    "test": "mocha",
+    "coverage": "istanbul cover _mocha"
   },
   "repository": {
     "type": "git",
@@ -17,8 +19,11 @@
     "es6-promise": "^2.3.0"
   },
   "devDependencies": {
-    "jshint": "^2.9.1",
+    "babel-preset-es2015": "^6.5.0",
+    "babel-cli": "^6.5.0",
     "chai": "^3.5.0",
-    "mocha": "^2.4.5"
+    "jshint": "^2.9.1",
+    "mocha": "^2.4.5",
+    "istanbul": "^0.4.2"
   }
 }

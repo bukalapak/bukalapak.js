@@ -1,3 +1,2 @@
-'use strict';
-
-module.exports = {};
+const Bukalapak = require('./lib/bukalapak');
+module.exports = Bukalapak.default;
