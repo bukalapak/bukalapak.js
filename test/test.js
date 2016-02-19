@@ -1,3 +1,5 @@
+"use strict";
+
 var expect = require('chai').expect;
 const Bukalapak = require('../index');
 
@@ -11,7 +13,7 @@ describe('Bukalapak', function() {
   });
 
   it('should raise error when called as function', function() {
-    expect(function() { Bukalapak() }).to.throw(TypeError);
+    expect(function() { Bukalapak(); }).to.throw(TypeError);
   });
 });
 
