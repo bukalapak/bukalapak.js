@@ -3,10 +3,10 @@ machine:
     version: 5.1.0
   environment:
     CODECLIMATE_REPO_TOKEN: 7e05f303f493b057a6ddcd3d0dc2d807ceac6b1a15fa7fe5eee15d9dc6deb198
-  test:
-    pre:
-      - npm install -g codeclimate-test-reporter
-    override:
-      - npm run coverage
-    post:
-      - codeclimate-test-reporter < coverage/lcov.info
+test:
+  pre:
+    - npm install -g codeclimate-test-reporter
+  override:
+    - npm run coverage
+  post:
+    - codeclimate-test-reporter < coverage/lcov.info
