@@ -6,8 +6,9 @@
   "scripts": {
     "lint": "standard",
     "build": "babel src -d lib",
+    "clean": "rimraf lib",
     "test": "mocha test --compilers js:babel-core/register",
-    "coverage": "istanbul cover _mocha",
+    "coverage": "istanbul cover _mocha -- --compilers js:babel-core/register",
     "watch": "gulp watch"
   },
   "repository": {
@@ -29,7 +30,8 @@
     "istanbul": "^0.4.2",
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
-    "standard": "^6.0.7"
+    "standard": "^6.0.7",
+    "rimraf": "^2.5.2"
   },
   "standard": {
     "ignore": ["lib"],
