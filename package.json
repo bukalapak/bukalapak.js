@@ -4,6 +4,7 @@
   "description": "Bukalapak API v4 javascript wrapper",
   "main": "lib/bukalapak.js",
   "scripts": {
+    "lint": "standard",
     "build": "babel src -d lib",
     "test": "mocha",
     "coverage": "istanbul cover _mocha",
@@ -26,6 +27,11 @@
     "mocha": "^2.4.5",
     "istanbul": "^0.4.2",
     "gulp": "^3.9.1",
-    "gulp-babel": "^6.1.2"
+    "gulp-babel": "^6.1.2",
+    "standard": "^6.0.7"
+  },
+  "standard": {
+    "ignore": ["lib"],
+    "global": ["describe", "it", "fetch"]
   }
 }
