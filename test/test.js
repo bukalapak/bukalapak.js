@@ -1,19 +1,18 @@
-'use strict'
+import { describe, it } from 'mocha'
+import { expect } from 'chai'
+import Bukalapak from '../src/bukalapak'
 
-var expect = require('chai').expect
-var Bukalapak = require('../index')
-
-describe('Bukalapak', function () {
-  it('should creates a new instance', function () {
-    var options = { clientId: '12345', clientSecret: 's3cr3t' }
-    var bukalapak = new Bukalapak(options)
+describe('Bukalapak', () => {
+  it('should creates a new instance', () => {
+    let options = { clientId: '12345', clientSecret: 's3cr3t' }
+    let bukalapak = new Bukalapak(options)
 
     expect(bukalapak).to.be.an.instanceOf(Bukalapak)
     expect(bukalapak.getOptions()).to.equal(options)
   })
 
-  it('should raise error when called as function', function () {
-    expect(function () { Bukalapak() }).to.throw(TypeError)
+  it('should raise error when called as function', () => {
+    expect(() => { Bukalapak() }).to.throw(TypeError)
   })
 })
 
