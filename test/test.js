@@ -1,7 +1,7 @@
 "use strict";
 
 var expect = require('chai').expect;
-const Bukalapak = require('../index');
+var Bukalapak = require('../index');
 
 describe('Bukalapak', function() {
   it('should creates a new instance', function() {

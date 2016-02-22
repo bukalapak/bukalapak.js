@@ -1,4 +1,4 @@
 "use strict";
 
-const Bukalapak = require('./lib/bukalapak');
+var Bukalapak = require('./lib/bukalapak');
 module.exports = Bukalapak.default;
