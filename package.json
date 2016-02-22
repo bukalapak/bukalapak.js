@@ -2,11 +2,12 @@
   "name": "bukalapak.js",
   "version": "0.0.0",
   "description": "Bukalapak API v4 javascript wrapper",
-  "main": "index.js",
+  "main": "lib/bukalapak.js",
   "scripts": {
     "build": "babel src -d lib",
     "test": "mocha",
-    "coverage": "istanbul cover _mocha"
+    "coverage": "istanbul cover _mocha",
+    "watch": "gulp watch"
   },
   "repository": {
     "type": "git",
@@ -15,8 +16,7 @@
   "author": "Alif Rachmawadi <subosito@bukalapak.com>",
   "license": "MIT",
   "dependencies": {
-    "isomorphic-fetch": "^2.2.1",
-    "es6-promise": "^2.3.0"
+    "isomorphic-fetch": "^2.2.1"
   },
   "devDependencies": {
     "babel-preset-es2015": "^6.5.0",
@@ -24,6 +24,8 @@
     "chai": "^3.5.0",
     "jshint": "^2.9.1",
     "mocha": "^2.4.5",
-    "istanbul": "^0.4.2"
+    "istanbul": "^0.4.2",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2"
   }
 }
