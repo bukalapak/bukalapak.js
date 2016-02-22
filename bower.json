@@ -1,0 +1,25 @@
+{
+  "name": "bukalapak.js",
+  "description": "Bukalapak API javascript wrapper",
+  "main": "lib/bukalapak.js",
+  "authors": [
+    "Alif Rachmawadi <subosito@bukalapak.com>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/bukalapak/bukalapak.js",
+  "moduleType": [
+    "es6"
+  ],
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "src",
+    "test",
+    "coverage"
+  ],
+  "dependencies": {
+    "isomorphic-fetch": "^2.2.1"
+  }
+}

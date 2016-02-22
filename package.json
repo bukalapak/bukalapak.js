@@ -1,7 +1,7 @@
 {
   "name": "bukalapak.js",
   "version": "0.0.0",
-  "description": "Bukalapak API v4 javascript wrapper",
+  "description": "Bukalapak API javascript wrapper",
   "main": "lib/bukalapak.js",
   "scripts": {
     "lint": "standard",
@@ -16,6 +16,7 @@
   },
   "author": "Alif Rachmawadi <subosito@bukalapak.com>",
   "license": "MIT",
+  "private": true,
   "dependencies": {
     "isomorphic-fetch": "^2.2.1"
   },
