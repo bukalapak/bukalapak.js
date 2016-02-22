@@ -1,5 +1,5 @@
 {
-  "name": "bukalapak.js",
+  "name": "bukalapak-js",
   "description": "Bukalapak API javascript wrapper",
   "main": "lib/bukalapak.js",
   "authors": [
