@@ -1,0 +1,11 @@
+{
+  "errors": [
+    {
+      "message": "You are not authorized",
+      "code": 10001
+    }
+  ],
+  "metadata": {
+    "http_status": 401
+  }
+}

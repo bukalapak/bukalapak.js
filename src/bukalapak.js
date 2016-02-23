@@ -1,3 +1,5 @@
+/*eslint prefer-spread: 2*/
+
 import fetch from 'isomorphic-fetch'
 
 const API_VERSION = 'v4'
@@ -27,11 +29,9 @@ class Bukalapak {
       if (typeof options !== 'object' || Array.isArray(options)) { throw new Error('`options` must be an object') }
 
       let opts = {
-        headers: {
-          ...this.headers
-        },
         ...options,
-        method: this._methodMatcher(method)
+        method: this._methodMatcher(method),
+        headers: Object.assign(options.headers || {}, this.headers)
       }
 
       // ensure body always present for POST request
