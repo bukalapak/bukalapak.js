@@ -1,27 +1,23 @@
 /*eslint no-new: 0*/
 
-import { describe, it } from 'mocha'
+import { describe, it, before, after } from 'mocha'
 import chai, { expect } from 'chai'
 import chaiAsPromised from 'chai-as-promised'
-import nock from 'nock'
 import Bukalapak from '../src/bukalapak'
 
 chai.use(chaiAsPromised)
 
-let baseUrl = 'https://api.bukalapak.com'
+const app = require('./app')
+
+let baseUrl = 'https://api.client.com'
+let mockUrl = 'http://localhost:8088'
 let options = { baseUrl: baseUrl }
 
-let fs = require('fs')
-let path = require('path')
-
-function loadFixture (filename) {
-  return fs.readFileSync(path.join(__dirname, 'fixtures', filename), { encoding: 'utf8' })
-}
-
 describe('Bukalapak', () => {
+  let client = new Bukalapak(options)
+
   it('should create a new instance', () => {
-    let bukalapak = new Bukalapak(options)
-    expect(bukalapak).to.be.an.instanceOf(Bukalapak)
+    expect(client).to.be.an.instanceOf(Bukalapak)
   })
 
   it('should raise error when no baseUrl option', () => {
@@ -33,31 +29,51 @@ describe('Bukalapak', () => {
   })
 
   it('should format options and remove invalid keys', () => {
-    let bukalapak = new Bukalapak(Object.assign(options, { invalidKey: 'foo' }))
-    expect(bukalapak.options).to.eql({ baseUrl: baseUrl })
+    client = new Bukalapak(Object.assign(options, { invalidKey: 'foo' }))
+    expect(client.options).to.eql({ baseUrl: baseUrl })
   })
 
   describe('http methods', () => {
-    let bukalapak = new Bukalapak(options)
-
     it('should support all http methods', () => {
       let methods = ['get', 'put', 'del', 'post', 'head', 'opts']
-      methods.forEach((method) => { expect(bukalapak[method]).to.be.a('function') })
+      methods.forEach((method) => { expect(client[method]).to.be.a('function') })
     })
 
     it('should throw an error if path is not a string', () => {
-      expect(() => { bukalapak.get({}) }).to.throw(Error, '`path` must be a string')
+      expect(() => { client.get({}) }).to.throw(Error, '`path` must be a string')
     })
 
     it('should throw an error if options is not an object', () => {
-      expect(() => { bukalapak.get('', []) }).to.throw(Error, '`options` must be an object')
-      expect(() => { bukalapak.get('', 11) }).to.throw(Error, '`options` must be an object')
+      expect(() => { client.get('', []) }).to.throw(Error, '`options` must be an object')
+      expect(() => { client.get('', 11) }).to.throw(Error, '`options` must be an object')
+    })
+  })
+
+  describe('http interactions', () => {
+    let server
+    let client = new Bukalapak({ baseUrl: mockUrl })
+
+    before((done) => { server = app.listen({ host: 'localhost', port: 8088 }, done) })
+    after((done) => { server.close(done) })
+
+    it('should auto set body for post request', (done) => {
+      let promise = client.post('/blank-post').then((response) => { return response.status })
+      expect(promise).to.eventually.be.equal(201).notify(done)
+    })
+
+    it('should able to perform delete request', (done) => {
+      let promise = client.del('/methods').then((response) => { return response.json() })
+      expect(promise).to.eventually.have.deep.property('method', 'DELETE').notify(done)
+    })
+
+    it('should able to perform options request', (done) => {
+      let promise = client.opts('/methods').then((response) => { return response.json() })
+      expect(promise).to.eventually.have.deep.property('method', 'OPTIONS').notify(done)
     })
 
     it('should handle not authorized error properly', () => {
-      nock(baseUrl).get('/').reply(401, loadFixture('unauthorized_error.json'))
-
-      let promise = bukalapak.get('/').then((response) => { return response.json() })
+      let client = new Bukalapak({ baseUrl: mockUrl })
+      let promise = client.get('/unauthorized').then((response) => { return response.json() })
 
       return Promise.all([
         expect(promise).to.eventually.have.deep.property('errors[0].message', 'You are not authorized'),

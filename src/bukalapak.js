@@ -44,10 +44,14 @@ class Bukalapak {
   }
 
   _methodMatcher (method) {
-    if (method === 'del') { return 'DELETE' }
-    if (method === 'opts') { return 'OPTIONS' }
-
-    return method.toUpperCase()
+    switch (method) {
+      case 'del':
+        return 'DELETE'
+      case 'opts':
+        return 'OPTIONS'
+      default:
+        return method.toUpperCase()
+    }
   }
 
   _fetch (...args) {
