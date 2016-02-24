@@ -1,7 +1,7 @@
 /*eslint prefer-spread: 2*/
 
 import fetch from 'isomorphic-fetch'
-import { transformUrl } from './util'
+import { transformUrl, isObject, isString, isUndefined } from './util'
 
 const API_VERSION = 'v4'
 const METHODS = ['get', 'put', 'del', 'post', 'head', 'opts']
@@ -26,8 +26,8 @@ class Bukalapak {
 
   _request (method) {
     return (path, options = {}) => {
-      if (typeof path !== 'string') { throw new Error('`path` must be a string') }
-      if (!(options instanceof Object) || (Array.isArray(options))) { throw new Error('`options` must be an object') }
+      if (!isString(path)) { throw new Error('`path` must be a string') }
+      if (!isObject(options)) { throw new Error('`options` must be an object') }
 
       let opts = {
         ...options,
@@ -41,7 +41,7 @@ class Bukalapak {
       let reqUrl = this._generateUrl(path, subdomain)
 
       // ensure body always present for POST request
-      if (opts.method === 'POST' && typeof opts.body === 'undefined') {
+      if (opts.method === 'POST' && isUndefined(opts.body)) {
         opts.body = ''
       }
 

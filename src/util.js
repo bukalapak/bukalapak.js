@@ -24,3 +24,15 @@ export function transformUrl (baseUrl, subdomain = '') {
 
   return [proto, '//', hostArr.join('.')].join('')
 }
+
+export function isObject (obj) {
+  return (obj instanceof Object) && !(Array.isArray(obj))
+}
+
+export function isString (str) {
+  return (typeof str === 'string')
+}
+
+export function isUndefined (thing) {
+  return (typeof thing === 'undefined')
+}
