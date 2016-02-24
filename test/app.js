@@ -1,6 +1,5 @@
 import express from 'express'
 import bodyParser from 'body-parser'
-import { expect } from 'chai'
 
 let fs = require('fs')
 let path = require('path')
@@ -19,8 +18,7 @@ app.all('/tests/unauthorized', (req, res, next) => {
 })
 
 app.post('/tests/post-blank-data', (req, res, next) => {
-  expect(req.body).to.be.eql({})
-  res.status(201).send('')
+  res.status(201).send({ body: req.body })
 })
 
 app.all('/tests/methods', (req, res, next) => {
@@ -29,6 +27,10 @@ app.all('/tests/methods', (req, res, next) => {
 
 app.get('/tests/domain', (req, res, next) => {
   res.status(200).json({ host: req.headers.host })
+})
+
+app.get('/tests/http-headers', (req, res, next) => {
+  res.status(200).json({ accept: req.headers.accept, 'user-agent': req.headers['user-agent'] })
 })
 
 module.exports = app

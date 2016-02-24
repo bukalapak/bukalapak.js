@@ -31,7 +31,7 @@ class Bukalapak {
       let opts = {
         ...options,
         method: this._methodMatcher(method),
-        headers: Object.assign(options.headers || {}, this.headers)
+        headers: Object.assign(this.headers, options.headers || {})
       }
 
       let subdomain = opts.subdomain

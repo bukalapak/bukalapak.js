@@ -56,8 +56,8 @@ describe('Bukalapak', () => {
     after((done) => { server.close(done) })
 
     it('should auto set body for post request', (done) => {
-      let promise = client.post('/tests/post-blank-data').then((response) => { return response.status })
-      expect(promise).to.eventually.be.equal(201).notify(done)
+      let promise = client.post('/tests/post-blank-data').then((response) => { return response.json() })
+      expect(promise).to.eventually.eql({ body: {} }).notify(done)
     })
 
     it('should able to perform delete request', (done) => {
@@ -84,6 +84,16 @@ describe('Bukalapak', () => {
       let client = new Bukalapak({ baseUrl: 'http://api.lvh.me:8088' })
       let promise = client.get('/tests/domain', { subdomain: 'www' }).then((response) => { return response.json() })
       expect(promise).to.eventually.eql({ host: 'www.lvh.me:8088' }).notify(done)
+    })
+
+    it('should be able to set custom headers', () => {
+      let options = { headers: { 'Accept': 'application/json', 'User-Agent': 'bukalapak.js//0.0.0' } }
+      let promise = client.get('/tests/http-headers', options).then((response) => { return response.json() })
+
+      return Promise.all([
+        expect(promise).to.eventually.have.deep.property('accept', 'application/json'),
+        expect(promise).to.eventually.have.deep.property('user-agent', 'bukalapak.js//0.0.0')
+      ])
     })
   })
 })
