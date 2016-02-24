@@ -24,7 +24,7 @@ describe('Bukalapak', () => {
   })
 
   it('should raise error when called as function', () => {
-    expect(() => { Bukalapak(options) }).to.throw(TypeError, 'Cannot call a class as a function')
+    expect(() => { Bukalapak() }).to.throw(TypeError, 'Cannot call a class as a function')
   })
 
   it('should format options and remove invalid keys', () => {

@@ -27,7 +27,7 @@ class Bukalapak {
   _request (method) {
     return (path, options = {}) => {
       if (typeof path !== 'string') { throw new Error('`path` must be a string') }
-      if (typeof options !== 'object' || Array.isArray(options)) { throw new Error('`options` must be an object') }
+      if (!(options instanceof Object) || (Array.isArray(options))) { throw new Error('`options` must be an object') }
 
       let opts = {
         ...options,
