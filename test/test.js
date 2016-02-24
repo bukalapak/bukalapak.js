@@ -9,8 +9,7 @@ chai.use(chaiAsPromised)
 
 const app = require('./app')
 
-let baseUrl = 'https://api.client.com'
-let mockUrl = 'http://localhost:8088'
+let baseUrl = 'http://localhost:8088'
 let options = { baseUrl: baseUrl }
 
 describe('Bukalapak', () => {
@@ -51,35 +50,40 @@ describe('Bukalapak', () => {
 
   describe('http interactions', () => {
     let server
-    let client = new Bukalapak({ baseUrl: mockUrl })
+    let client = new Bukalapak(options)
 
-    before((done) => { server = app.listen({ host: 'localhost', port: 8088 }, done) })
+    before((done) => { server = app.listen({ port: 8088 }, done) })
     after((done) => { server.close(done) })
 
     it('should auto set body for post request', (done) => {
-      let promise = client.post('/blank-post').then((response) => { return response.status })
+      let promise = client.post('/tests/post-blank-data').then((response) => { return response.status })
       expect(promise).to.eventually.be.equal(201).notify(done)
     })
 
     it('should able to perform delete request', (done) => {
-      let promise = client.del('/methods').then((response) => { return response.json() })
+      let promise = client.del('/tests/methods').then((response) => { return response.json() })
       expect(promise).to.eventually.have.deep.property('method', 'DELETE').notify(done)
     })
 
     it('should able to perform options request', (done) => {
-      let promise = client.opts('/methods').then((response) => { return response.json() })
+      let promise = client.opts('/tests/methods').then((response) => { return response.json() })
       expect(promise).to.eventually.have.deep.property('method', 'OPTIONS').notify(done)
     })
 
     it('should handle not authorized error properly', () => {
-      let client = new Bukalapak({ baseUrl: mockUrl })
-      let promise = client.get('/unauthorized').then((response) => { return response.json() })
+      let promise = client.get('/tests/unauthorized').then((response) => { return response.json() })
 
       return Promise.all([
         expect(promise).to.eventually.have.deep.property('errors[0].message', 'You are not authorized'),
         expect(promise).to.eventually.have.deep.property('errors[0].code', 10001),
         expect(promise).to.eventually.have.deep.property('metadata.http_status', 401)
       ])
+    })
+
+    it('should be able to switch baseUrl subdomain', (done) => {
+      let client = new Bukalapak({ baseUrl: 'http://api.lvh.me:8088' })
+      let promise = client.get('/tests/domain', { subdomain: 'www' }).then((response) => { return response.json() })
+      expect(promise).to.eventually.eql({ host: 'www.lvh.me:8088' }).notify(done)
     })
   })
 })

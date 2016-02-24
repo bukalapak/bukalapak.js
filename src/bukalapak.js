@@ -34,12 +34,17 @@ class Bukalapak {
         headers: Object.assign(options.headers || {}, this.headers)
       }
 
+      let subdomain = opts.subdomain
+      delete opts.subdomain
+
+      let reqUrl = this._generateUrl(path, subdomain)
+
       // ensure body always present for POST request
       if (opts.method === 'POST' && typeof opts.body === 'undefined') {
         opts.body = ''
       }
 
-      return this._fetch(this.options.baseUrl + path, opts)
+      return this._fetch(reqUrl, opts)
     }
   }
 
@@ -56,6 +61,26 @@ class Bukalapak {
 
   _fetch (...args) {
     return fetch(...args)
+  }
+
+  _generateUrl (path, subdomain) {
+    if (typeof subdomain === 'undefined') {
+      return this.options.baseUrl + path
+    }
+
+    // TODO: improve this later
+    let baseUrl = this.options.baseUrl.split('//')
+    let baseProto = baseUrl.shift()
+    let baseHost = baseUrl.shift()
+    let baseSplit = baseHost.split('.')
+
+    if (baseSplit.length > 1) { baseSplit.shift() }
+
+    baseSplit.unshift(subdomain)
+
+    let fullUrl = [baseProto, '//', baseSplit.join('.')].join('')
+
+    return fullUrl + path
   }
 }
 

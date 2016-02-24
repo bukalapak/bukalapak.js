@@ -14,17 +14,21 @@ let extended = { extended: false }
 
 app.use(bodyParser.json(extended))
 
-app.all('/unauthorized', (req, res, next) => {
+app.all('/tests/unauthorized', (req, res, next) => {
   res.status(401).send(loadFixture('unauthorized_error.json'))
 })
 
-app.post('/blank-post', (req, res, next) => {
+app.post('/tests/post-blank-data', (req, res, next) => {
   expect(req.body).to.be.eql({})
   res.status(201).send('')
 })
 
-app.all('/methods', (req, res, next) => {
+app.all('/tests/methods', (req, res, next) => {
   res.status(202).json({ method: req.method })
+})
+
+app.get('/tests/domain', (req, res, next) => {
+  res.status(200).json({ host: req.headers.host })
 })
 
 module.exports = app
