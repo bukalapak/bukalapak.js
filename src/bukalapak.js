@@ -1,6 +1,7 @@
 /*eslint prefer-spread: 2*/
 
 import fetch from 'isomorphic-fetch'
+import { transformUrl } from './util'
 
 const API_VERSION = 'v4'
 const METHODS = ['get', 'put', 'del', 'post', 'head', 'opts']
@@ -64,23 +65,7 @@ class Bukalapak {
   }
 
   _generateUrl (path, subdomain) {
-    if (typeof subdomain === 'undefined') {
-      return this.options.baseUrl + path
-    }
-
-    // TODO: improve this later
-    let baseUrl = this.options.baseUrl.split('//')
-    let baseProto = baseUrl.shift()
-    let baseHost = baseUrl.shift()
-    let baseSplit = baseHost.split('.')
-
-    if (baseSplit.length > 1) { baseSplit.shift() }
-
-    baseSplit.unshift(subdomain)
-
-    let fullUrl = [baseProto, '//', baseSplit.join('.')].join('')
-
-    return fullUrl + path
+    return transformUrl(this.options.baseUrl, subdomain) + path
   }
 }
 
