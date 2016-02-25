@@ -29,11 +29,10 @@ class Bukalapak {
       if (!isString(path)) { throw new Error('`path` must be a string') }
       if (!isObject(options)) { throw new Error('`options` must be an object') }
 
-      let opts = {
-        ...options,
+      let opts = Object.assign({}, options, {
         method: this._methodMatcher(method),
-        headers: Object.assign(this.headers, options.headers || {})
-      }
+        headers: Object.assign({}, this.headers, options.headers || {})
+      })
 
       let subdomain = opts.subdomain
       delete opts.subdomain
