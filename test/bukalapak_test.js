@@ -9,8 +9,22 @@ chai.use(chaiAsPromised)
 
 const app = require('./app')
 
+let querystring = require('querystring')
+
+// let LocalStorage = require('node-localstorage').LocalStorage
+// let localStorage = new LocalStorage('./local_storage')
+
 let baseUrl = 'http://localhost:8088'
 let options = { baseUrl: baseUrl }
+
+let Util = {
+  oauthPath (params) {
+    let oauthParams = { client_id: 'abcdef', client_secret: 1234567 }
+    let options = Object.assign({}, params, oauthParams)
+
+    return '/tests/oauth-token?' + querystring.stringify(options)
+  }
+}
 
 describe('Bukalapak', () => {
   let client = new Bukalapak(options)
@@ -94,6 +108,86 @@ describe('Bukalapak', () => {
         expect(promise).to.eventually.have.deep.property('accept', 'application/json'),
         expect(promise).to.eventually.have.deep.property('user-agent', 'bukalapak.js//0.0.0')
       ])
+    })
+
+    describe('oauth interactions', () => {
+      describe('client credentials', () => {
+        it('should return error for invalid scope', () => {
+          let httpPath = Util.oauthPath({ grant_type: 'client_credentials', scope: 'unkn0wn' })
+          let promise = client.post(httpPath).then((response) => { return response.json() })
+
+          return Promise.all([
+            expect(promise).to.eventually.have.property('error', 'invalid_scope'),
+            expect(promise).to.eventually.have.property('error_description')
+          ])
+        })
+
+        it('should generate token for valid client credentials request', () => {
+          let httpPath = Util.oauthPath({ grant_type: 'client_credentials', scope: 'public' })
+          let promise = client.post(httpPath).then((response) => { return response.json() })
+
+          return Promise.all([
+            expect(promise).to.eventually.have.property('token_type', 'bearer'),
+            expect(promise).to.eventually.have.property('expires_in', 7200),
+            expect(promise).to.eventually.have.property('scope', 'public'),
+            expect(promise).to.eventually.have.property('access_token'),
+            expect(promise).to.eventually.have.property('created_at'),
+            expect(promise).to.not.eventually.have.property('refresh_token')
+          ])
+        })
+      })
+
+      describe('resource owner password credentials', () => {
+        it('should return error for missing username and password', () => {
+          let httpPath = Util.oauthPath({ grant_type: 'password' })
+          let promise = client.post(httpPath).then((response) => { return response.json() })
+
+          return Promise.all([
+            expect(promise).to.eventually.have.property('error', 'invalid_grant'),
+            expect(promise).to.eventually.have.property('error_description')
+          ])
+        })
+
+        it('should generate token for valid resource owner password credentials request', () => {
+          let httpPath = Util.oauthPath({ grant_type: 'password', scope: 'public user', username: 'foo', password: 's3cr3t' })
+          let promise = client.post(httpPath).then((response) => { return response.json() })
+
+          return Promise.all([
+            expect(promise).to.eventually.have.property('token_type', 'bearer'),
+            expect(promise).to.eventually.have.property('expires_in', 7200),
+            expect(promise).to.eventually.have.property('scope', 'public user'),
+            expect(promise).to.eventually.have.property('access_token'),
+            expect(promise).to.eventually.have.property('refresh_token'),
+            expect(promise).to.eventually.have.property('created_at')
+          ])
+        })
+      })
+
+      describe('refresh token', () => {
+        it('should return error for missing refresh_token', () => {
+          let httpPath = Util.oauthPath({ grant_type: 'refresh_token', access_token: 'abcdef' })
+          let promise = client.post(httpPath).then((response) => { return response.json() })
+
+          return Promise.all([
+            expect(promise).to.eventually.have.property('error', 'invalid_grant'),
+            expect(promise).to.eventually.have.property('error_description')
+          ])
+        })
+
+        it('should generate token for valid refresh token request', () => {
+          let httpPath = Util.oauthPath({ grant_type: 'refresh_token', scope: 'public user', access_token: 'abcdef', refresh_token: 'zxcv' })
+          let promise = client.post(httpPath).then((response) => { return response.json() })
+
+          return Promise.all([
+            expect(promise).to.eventually.have.property('token_type', 'bearer'),
+            expect(promise).to.eventually.have.property('expires_in', 7200),
+            expect(promise).to.eventually.have.property('scope', 'public user'),
+            expect(promise).to.eventually.have.property('access_token'),
+            expect(promise).to.eventually.have.property('refresh_token'),
+            expect(promise).to.eventually.have.property('created_at')
+          ])
+        })
+      })
     })
   })
 })
