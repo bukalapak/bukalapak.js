@@ -4,25 +4,24 @@ import { describe, it, before, after } from 'mocha'
 import chai, { expect } from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import Bukalapak from '../src/bukalapak'
+import queryString from 'query-string'
 
 chai.use(chaiAsPromised)
 
 const app = require('./app')
 
-let querystring = require('querystring')
-
-// let LocalStorage = require('node-localstorage').LocalStorage
-// let localStorage = new LocalStorage('./local_storage')
+let LocalStorage = require('node-localstorage').LocalStorage
+let localStorage = new LocalStorage('./local_storage')
 
 let baseUrl = 'http://localhost:8088'
-let options = { baseUrl: baseUrl }
+let options = { baseUrl: baseUrl, storage: localStorage }
 
 let Util = {
   oauthPath (params) {
     let oauthParams = { client_id: 'abcdef', client_secret: 1234567 }
     let options = Object.assign({}, params, oauthParams)
 
-    return '/tests/oauth-token?' + querystring.stringify(options)
+    return '/tests/oauth-token?' + queryString.stringify(options)
   }
 }
 
@@ -43,7 +42,7 @@ describe('Bukalapak', () => {
 
   it('should format options and remove invalid keys', () => {
     client = new Bukalapak(Object.assign(options, { invalidKey: 'foo' }))
-    expect(client.options).to.eql({ baseUrl: baseUrl })
+    expect(client.options).to.eql({ baseUrl: baseUrl, auth: {} })
   })
 
   describe('http methods', () => {
@@ -59,6 +58,25 @@ describe('Bukalapak', () => {
     it('should throw an error if options is not an object', () => {
       expect(() => { client.get('', []) }).to.throw(Error, '`options` must be an object')
       expect(() => { client.get('', 11) }).to.throw(Error, '`options` must be an object')
+    })
+  })
+
+  describe('oauth methods', () => {
+    let oauthParams = { clientId: 'abcdef', clientSecret: 1234567, scope: 'public user' }
+    let client = new Bukalapak(Object.assign({}, options, oauthParams))
+
+    describe('clientCredentials', () => {
+      let url = '/oauth/token?client_id=abcdef&client_secret=1234567&grant_type=client_credentials&scope=public'
+      expect(client.clientCredentials()).to.equal(url)
+    })
+
+    describe('refreshToken', () => {
+      expect(() => { client.refreshToken() }).to.throw(Error, 'Unable to perform refresh_token request')
+    })
+
+    describe('passwordCredentials', () => {
+      let url = '/oauth/token?client_id=abcdef&client_secret=1234567&grant_type=password&scope=public%20user'
+      expect(client.passwordCredentials()).to.equal(url)
     })
   })
 
@@ -95,7 +113,7 @@ describe('Bukalapak', () => {
     })
 
     it('should be able to switch baseUrl subdomain', (done) => {
-      let client = new Bukalapak({ baseUrl: 'http://api.lvh.me:8088' })
+      let client = new Bukalapak({ baseUrl: 'http://api.lvh.me:8088', storage: localStorage })
       let promise = client.get('/tests/domain', { subdomain: 'www' }).then((response) => { return response.json() })
       expect(promise).to.eventually.eql({ host: 'www.lvh.me:8088' }).notify(done)
     })

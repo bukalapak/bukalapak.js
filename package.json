@@ -19,7 +19,8 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "isomorphic-fetch": "^2.2.1"
+    "isomorphic-fetch": "^2.2.1",
+    "query-string": "^3.0.1"
   },
   "devDependencies": {
     "babel-cli": "^6.5.0",
@@ -35,5 +36,10 @@
     "rimraf": "^2.5.2",
     "snazzy": "^3.0.0",
     "standard": "^6.0.7"
+  },
+  "standard": {
+    "globals": [
+      "localStorage"
+    ]
   }
 }
