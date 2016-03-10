@@ -1,23 +1,52 @@
 class Storage {
-  constructor (storage) {
+  constructor (storage, options = {}) {
     if (typeof storage === 'undefined') {
       throw new Error('`storage` is required')
     }
 
     this.storage = storage
+    this.options = {}
+
+    if (typeof options.serialize === 'boolean') {
+      this.options.serialize = options.serialize
+    } else {
+      this.options.serialize = true
+    }
   }
 
-  isExist (key) {
-    let val = this.storage.getItem(key)
-    return (val === null || typeof val === 'undefined')
+  hasItem (key) {
+    let val = this.getItem(key)
+    return !(val === null || typeof val === 'undefined')
   }
 
-  saveItem (key, value) {
-    return this.storage.setItem(key, this._encode(value))
+  setItem (key, value) {
+    if (this.options.serialize) {
+      value = this._encode(value)
+    }
+
+    return this.storage.setItem(key, value)
   }
 
-  fetchItem (key) {
-    return this._encode(this.storage.getItem(key))
+  getItem (key) {
+    let value = this.storage.getItem(key)
+
+    if (this.options.serialize) {
+      return this._decode(value)
+    }
+
+    return value
+  }
+
+  removeItem (key) {
+    return this.storage.removeItem(key)
+  }
+
+  clear () {
+    return this.storage.clear()
+  }
+
+  count () {
+    return this.storage.length
   }
 
   _encode (value) {

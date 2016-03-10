@@ -66,7 +66,7 @@ class Bukalapak {
         params.scope = 'public'
         break
       case 'refresh_token':
-        let accessToken = this.storage.fetchItem('access_token')
+        let accessToken = this.storage.getItem('access_token')
 
         if (accessToken == null || !(accessToken.refresh_token)) {
           throw new Error('Unable to perform refresh_token request')
