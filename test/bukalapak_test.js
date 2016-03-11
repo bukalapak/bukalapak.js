@@ -42,7 +42,7 @@ describe('Bukalapak', () => {
 
   it('should format options and remove invalid keys', () => {
     client = new Bukalapak(Object.assign(options, { invalidKey: 'foo' }))
-    expect(client.options).to.eql({ baseUrl: baseUrl, auth: {} })
+    expect(client.options).to.eql({ baseUrl: baseUrl })
   })
 
   describe('http methods', () => {
@@ -63,20 +63,22 @@ describe('Bukalapak', () => {
 
   describe('oauth methods', () => {
     let oauthParams = { clientId: 'abcdef', clientSecret: 1234567, scope: 'public user' }
-    let client = new Bukalapak(Object.assign({}, options, oauthParams))
+    let client = new Bukalapak(options)
+
+    client.useAuthAdapter(oauthParams)
 
     describe('clientCredentials', () => {
       let url = '/oauth/token?client_id=abcdef&client_secret=1234567&grant_type=client_credentials&scope=public'
-      expect(client.clientCredentials()).to.equal(url)
+      expect(client.auth.clientCredentials()).to.equal(url)
     })
 
     describe('refreshToken', () => {
-      expect(() => { client.refreshToken() }).to.throw(Error, 'Unable to perform refresh_token request')
+      expect(() => { client.auth.refreshToken() }).to.throw(Error, 'Unable to perform refresh_token request')
     })
 
     describe('passwordCredentials', () => {
       let url = '/oauth/token?client_id=abcdef&client_secret=1234567&grant_type=password&scope=public%20user'
-      expect(client.passwordCredentials()).to.equal(url)
+      expect(client.auth.passwordCredentials()).to.equal(url)
     })
   })
 

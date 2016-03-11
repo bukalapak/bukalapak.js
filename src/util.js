@@ -36,3 +36,7 @@ export function isString (str) {
 export function isUndefined (thing) {
   return (typeof thing === 'undefined')
 }
+
+export function isBlank (obj) {
+  return (typeof obj === 'undefined') || (obj === null) || (obj === '')
+}

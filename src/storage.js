@@ -1,13 +1,13 @@
 class Storage {
   constructor (storage, options = {}) {
-    if (typeof storage === 'undefined') {
+    if (this._isUndefined(storage)) {
       throw new Error('`storage` is required')
     }
 
     this.storage = storage
     this.options = {}
 
-    if (typeof options.serialize === 'boolean') {
+    if (this._isBoolean(options.serialize)) {
       this.options.serialize = options.serialize
     } else {
       this.options.serialize = true
@@ -16,7 +16,7 @@ class Storage {
 
   hasItem (key) {
     let val = this.getItem(key)
-    return !(val === null || typeof val === 'undefined')
+    return !(this._isNull(val) || this._isUndefined(val))
   }
 
   setItem (key, value) {
@@ -67,6 +67,18 @@ class Storage {
 
   _isObject (thing) {
     return (thing instanceof Object)
+  }
+
+  _isUndefined (thing) {
+    return (typeof thing === 'undefined')
+  }
+
+  _isBoolean (thing) {
+    return (typeof thing === 'boolean')
+  }
+
+  _isNull (thing) {
+    return (thing === null)
   }
 }
 
