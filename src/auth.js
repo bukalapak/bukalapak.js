@@ -58,14 +58,28 @@ class Auth {
     return this._doRequest(this._authTokenUri('refresh_token'))
   }
 
-  formatRequest (options) {
-    let token = this._accessToken()
+  formatRequest (reqUrl, options) {
+    let formatOptions = (token) => {
+      if (!reqUrl.match('grant_type=')) {
+        options.headers['Authorization'] = `Bearer ${token.access_token}`
+      }
 
-    if (!isBlank(token.access_token)) {
-      options.headers['Authorization'] = `Bearer ${token.access_token}`
+      return options
     }
 
-    return options
+    return new Promise((resolve, reject) => {
+      let token = this._accessToken()
+
+      if (!isBlank(token) && token.isExpired() && !reqUrl.match('refresh_token=')) {
+        reject(token)
+      } else {
+        resolve(token)
+      }
+    })
+    .then(formatOptions)
+    .catch(() => {
+      return this.refreshToken().then(formatOptions)
+    })
   }
 
   _accessToken () {

@@ -8,8 +8,14 @@ function loadFixture (filename) {
   return fs.readFileSync(path.join(__dirname, 'fixtures', filename), { encoding: 'utf8' })
 }
 
-function formatResponse (hash) {
-  return Object.assign({}, hash, { created_at: Date.now() })
+function formatResponse (hash, options = {}) {
+  let date = Date.now()
+
+  if (options.expired) {
+    date = date - 9600
+  }
+
+  return Object.assign({}, hash, { created_at: date })
 }
 
 function isUndefined (thing) {
@@ -39,6 +45,21 @@ let validResponse = {
     expires_in: 7200,
     refresh_token: '20f5cb01963619d542330844b9b3fdb532fd3ded76cbe9145cfc470fff2fa788',
     scope: 'public user'
+  }
+}
+
+let errorResponse = {
+  invalidClient: {
+    error: 'invalid_client',
+    error_description: 'Client authentication failed due to unknown client, no client authentication included, or unsupported authentication method.'
+  },
+  invalidScope: {
+    error: 'invalid_scope',
+    error_description: 'The requested scope is invalid, unknown, or malformed.'
+  },
+  invalidGrant: {
+    error: 'invalid_grant',
+    error_description: 'The provided authorization grant is invalid, expired, revoked, does not match the redirection URI used in the authorization request, or was issued to another client.'
   }
 }
 
@@ -74,21 +95,6 @@ app.route('/tests/request-token')
   })
 
 app.post('/tests/oauth-token', (req, res, next) => {
-  let errorResponse = {
-    invalidClient: {
-      error: 'invalid_client',
-      error_description: 'Client authentication failed due to unknown client, no client authentication included, or unsupported authentication method.'
-    },
-    invalidScope: {
-      error: 'invalid_scope',
-      error_description: 'The requested scope is invalid, unknown, or malformed.'
-    },
-    invalidGrant: {
-      error: 'invalid_grant',
-      error_description: 'The provided authorization grant is invalid, expired, revoked, does not match the redirection URI used in the authorization request, or was issued to another client.'
-    }
-  }
-
   if (req.query.client_id === '' || req.query.client_secret === '') {
     return res.status(401).json(errorResponse.invalidClient)
   }
@@ -103,6 +109,27 @@ app.post('/tests/oauth-token', (req, res, next) => {
     case 'password':
       if (!(isUndefined(req.query.username) || isUndefined(req.query.password))) {
         return res.status(200).json(formatResponse(validResponse.password))
+      }
+      break
+    case 'refresh_token':
+      if (!(isUndefined(req.query.access_token) || isUndefined(req.query.refresh_token))) {
+        return res.status(200).json(formatResponse(validResponse.refreshToken))
+      }
+      break
+  }
+
+  res.status(401).json(errorResponse.invalidGrant)
+})
+
+app.post('/tests/expired-token', (req, res, next) => {
+  if (req.query.client_id === '' || req.query.client_secret === '') {
+    return res.status(401).json(errorResponse.invalidClient)
+  }
+
+  switch (req.query.grant_type) {
+    case 'password':
+      if (!(isUndefined(req.query.username) || isUndefined(req.query.password))) {
+        return res.status(200).json(formatResponse(validResponse.password, { expired: true }))
       }
       break
     case 'refresh_token':

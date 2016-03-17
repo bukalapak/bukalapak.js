@@ -59,3 +59,34 @@ describe('auth adapter', () => {
     })
   })
 })
+
+describe('auth adapter: auto refresh token', () => {
+  let client = new Bukalapak(options)
+  let server
+
+  before((done) => { server = app.listen({ port: 8088 }, done) })
+  after((done) => { server.close(done) })
+  beforeEach((done) => {
+    client.useAdapter('auth', Object.assign({}, { tokenPath: '/tests/expired-token' }, oauthParams)).then(() => { done() })
+  })
+
+  afterEach(() => {
+    return Promise.all([ localStorage.removeItem('access_token') ])
+  })
+
+  describe('resource owner password', () => {
+    beforeEach((done) => {
+      client.auth.login('foo', 's3cr3t').then(() => { done() })
+    })
+
+    it('should auto-refresh resource owner password token before attach it in request headers', (done) => {
+      let promise = client.get('/tests/request-token').then((response) => { return response.json() })
+      let wanted = {
+        accept: 'application/vnd.bukalapak.v4+json',
+        authorization: `Bearer ${validResponse.refreshToken.access_token}`
+      }
+
+      expect(promise).to.eventually.eql(wanted).notify(done)
+    })
+  })
+})

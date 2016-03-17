@@ -10,7 +10,6 @@ const AVAILABLE_ADAPTERS = { auth: Auth }
 class Bukalapak {
   constructor (options = {}) {
     this.options = {}
-    this.adapters = []
     this.headers = {
       'Accept': `application/vnd.bukalapak.${API_VERSION}+json`
     }
@@ -33,7 +32,6 @@ class Bukalapak {
   }
 
   useAdapter (name, options) {
-    this.adapters.push(name)
     this[name] = new AVAILABLE_ADAPTERS[name](this, options)
     return this[name].registerAdapter()
   }
@@ -58,13 +56,13 @@ class Bukalapak {
         opts.body = ''
       }
 
-      this.adapters.forEach((adapter) => {
-        if (typeof this[adapter].formatRequest === 'function') {
-          opts = this[adapter].formatRequest(opts)
-        }
-      })
-
-      return this._fetch(reqUrl, opts)
+      if (this.auth) {
+        return this.auth.formatRequest(reqUrl, opts).then((options) => {
+          return this._fetch(reqUrl, options)
+        })
+      } else {
+        return this._fetch(reqUrl, opts)
+      }
     }
   }
 
