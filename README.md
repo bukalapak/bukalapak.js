@@ -12,8 +12,9 @@ Bukalapak API javascript wrapper.
 // initialization
 let client = new Bukalapak({ baseUrl: 'https://api.bukalapak.com/', storage: localStorage })
 
-// use auth adapter
+// use auth adapter and api adapter
 client.useAdapter('auth', { clientId: 'abcdef', clientSecret: '1234567', subdomain: 'www' })
+client.useAdapter('api')
 
 // read-only operation, return promise, auto include `Authorization` header with token from client_credentials
 client.get('/products', { query: { keywords: 'thinkpad' } })
