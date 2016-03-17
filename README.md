@@ -25,7 +25,7 @@ client.auth.login('subosito@bukalapak.com', 's3cr3t-p4ssw0rd')
 
 // accessing endpoint, return promise, , auto include `Authorization` header with token from resource_owner_password
 // it will auto-refresh token when it's expired.
-client.post('/me')
+client.get('/me')
 client.api.me() // this is just shortcut
 
 // remove username and password pair, and use client_credentials token instead
