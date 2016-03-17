@@ -56,6 +56,7 @@ class Bukalapak {
         opts.body = ''
       }
 
+      // enhance this later...
       if (this.auth) {
         return this.auth.formatRequest(reqUrl, opts).then((options) => {
           return this._fetch(reqUrl, options)

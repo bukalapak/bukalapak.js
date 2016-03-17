@@ -96,7 +96,7 @@ class Auth {
   }
 
   _doRequest (uri) {
-    return this.client.post(uri)
+    return this.client.post(uri, { subdomain: this.options.subdomain || '' })
       .then((response) => { return response.json() })
       .then((data) => { this.client.storage.setItem('access_token', data); return data })
   }
@@ -144,7 +144,7 @@ class Auth {
   }
 
   _validOptionKeys () {
-    return ['clientId', 'clientSecret', 'username', 'password', 'scope', 'tokenPath']
+    return ['clientId', 'clientSecret', 'username', 'password', 'scope', 'tokenPath', 'subdomain']
   }
 
   _token_path () {

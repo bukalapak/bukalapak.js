@@ -10,24 +10,24 @@ Bukalapak API javascript wrapper.
 
 ```javascript
 // initialization
-let api = new Bukalapak({ baseUrl: 'https://api.bukalapak.com/', storage: localStorage })
+let client = new Bukalapak({ baseUrl: 'https://api.bukalapak.com/', storage: localStorage })
 
 // use auth adapter
-api.useAdapter('auth', { clientId: 'abcdef', clientSecret: '1234567' })
+client.useAdapter('auth', { clientId: 'abcdef', clientSecret: '1234567', subdomain: 'www' })
 
 // read-only operation, return promise, auto include `Authorization` header with token from client_credentials
-api.get('/products', { query: { keywords: 'thinkpad' } })
-api.products({ keywords: 'thinkpad' })
+client.get('/products', { query: { keywords: 'thinkpad' } })
+client.api.products({ keywords: 'thinkpad' })
 
 // api, now have `auth` method
-api.auth.login('subosito@bukalapak.com', 's3cr3t-p4ssw0rd')
+client.auth.login('subosito@bukalapak.com', 's3cr3t-p4ssw0rd')
 
 // accessing endpoint, return promise, , auto include `Authorization` header with token from resource_owner_password
 // it will auto-refresh token when it's expired.
-api.post('/me')
-api.me() // this is just shortcut
+client.post('/me')
+client.api.me() // this is just shortcut
 
 // remove username and password pair, and use client_credentials token instead
-api.auth.logout()
+client.auth.logout()
 ```
 

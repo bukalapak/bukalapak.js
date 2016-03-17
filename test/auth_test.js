@@ -44,6 +44,14 @@ describe('auth adapter', () => {
 
     expect(() => { client.auth.userAuth() }).to.throw(Error, 'Unable to perform resource owner password credentials request')
   })
+
+  it('using custom subdomain', (done) => {
+    localStorage.removeItem('access_token')
+    let client = new Bukalapak(options)
+    client.useAdapter('auth', Object.assign({}, oauthParams, { subdomain: 'www' }))
+
+    expect(client.auth.clientAuth()).to.eventually.be.rejectedWith(Error, /www.localhost/).notify(done)
+  })
 })
 
 describe('auth adapter: token', () => {
