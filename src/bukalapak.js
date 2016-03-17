@@ -1,5 +1,6 @@
 import fetch from 'isomorphic-fetch'
 import { transformUrl, isObject, isString, isUndefined } from './util'
+import queryString from 'query-string'
 import Storage from './storage'
 import Auth from './auth'
 import Api from './api'
@@ -50,7 +51,10 @@ class Bukalapak {
       let subdomain = opts.subdomain
       delete opts.subdomain
 
-      let reqUrl = this._generateUrl(path, subdomain)
+      let query = opts.query
+      delete opts.query
+
+      let reqUrl = this._generateUrl(path, subdomain, query)
 
       // ensure body always present for POST request
       if (opts.method === 'POST' && isUndefined(opts.body)) {
@@ -83,8 +87,19 @@ class Bukalapak {
     return fetch(...args)
   }
 
-  _generateUrl (path, subdomain) {
-    return transformUrl(this.options.baseUrl, subdomain) + path
+  _generateUrl (path, subdomain, query = {}) {
+    let reqUrl = transformUrl(this.options.baseUrl, subdomain) + path
+    let reqQuery = this._queryString(query)
+
+    if (reqQuery !== '') {
+      return reqUrl + `?${reqQuery}`
+    } else {
+      return reqUrl
+    }
+  }
+
+  _queryString (query) {
+    return queryString.stringify(query)
   }
 }
 

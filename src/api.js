@@ -1,5 +1,3 @@
-import queryString from 'query-string'
-
 const ENDPOINTS = {
   me: { method: 'get', path: '/me' },
   products: { method: 'get', path: '/products' }
@@ -22,18 +20,8 @@ class Api {
 
   _request (method, path) {
     return (query = {}) => {
-      let queryStr = this._queryString(query)
-
-      if (queryStr !== '') {
-        path += `?${queryStr}`
-      }
-
-      return this.client[method](path, {})
+      return this.client[method](path, { query: query })
     }
-  }
-
-  _queryString (query) {
-    return queryString.stringify(query)
   }
 }
 
