@@ -36,6 +36,10 @@ describe('Bukalapak', () => {
     expect(() => { new Bukalapak({}) }).to.throw(Error, '`baseUrl` option is required')
   })
 
+  it('should raise error when no storage option', () => {
+    expect(() => { new Bukalapak({ baseUrl: baseUrl }) }).to.throw(Error, '`storage` option is required')
+  })
+
   it('should raise error when called as function', () => {
     expect(() => { Bukalapak() }).to.throw(TypeError, 'Cannot call a class as a function')
   })

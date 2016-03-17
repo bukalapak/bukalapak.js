@@ -85,9 +85,7 @@ class Auth {
   _accessToken () {
     let token = this.client.storage.getItem('access_token')
 
-    if (typeof token !== 'object') { token = {} }
-
-    return Object.assign({}, token, {
+    return Object.assign({}, token || {}, {
       isExpired () {
         return (this.created_at + this.expires_in) <= this.now()
       },

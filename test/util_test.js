@@ -1,6 +1,6 @@
 import { describe, it } from 'mocha'
 import { expect } from 'chai'
-import { transformUrl, isObject, isString, isUndefined } from '../src/util'
+import { transformUrl, isObject, isString, isUndefined, isBlank } from '../src/util'
 
 let baseUrl = 'https://api.bukalapak.com'
 
@@ -47,6 +47,17 @@ describe('isUndefined()', () => {
     expect(isUndefined({ foo: 'bar' })).to.be.false
     expect(isUndefined([ 'foo', 'bar' ])).to.be.false
     expect(isUndefined('foo')).to.be.false
-    expect(isUndefined(undefined)).to.be.string
+    expect(isUndefined(undefined)).to.be.true
+  })
+})
+
+describe('isBlank()', () => {
+  it('should be able to determine blank object', () => {
+    expect(isBlank({ foo: 'bar' })).to.be.false
+    expect(isBlank([ 'foo', 'bar' ])).to.be.false
+    expect(isBlank('foo')).to.be.false
+    expect(isBlank(undefined)).to.be.true
+    expect(isBlank(null)).to.be.true
+    expect(isBlank('')).to.be.true
   })
 })
