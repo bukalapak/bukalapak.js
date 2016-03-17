@@ -95,6 +95,25 @@ describe('auth adapter: token', () => {
       expect(promise).to.eventually.eql(wanted).notify(done)
     })
   })
+
+  describe('resource owner password: logout', () => {
+    beforeEach(() => {
+      return Promise.all([
+        client.auth.login('foo', 's3cr3t'),
+        client.auth.logout()
+      ])
+    })
+
+    it('should attach client credentials token in request headers', (done) => {
+      let promise = client.get('/tests/request-token').then((response) => { return response.json() })
+      let wanted = {
+        accept: 'application/vnd.bukalapak.v4+json',
+        authorization: `Bearer ${validResponse.clientCredentials.access_token}`
+      }
+
+      expect(promise).to.eventually.eql(wanted).notify(done)
+    })
+  })
 })
 
 describe('auth adapter: auto refresh token', () => {

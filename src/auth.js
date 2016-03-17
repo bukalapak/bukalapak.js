@@ -45,6 +45,12 @@ class Auth {
     return this.userAuth()
   }
 
+  logout () {
+    delete this.options.username
+    delete this.options.password
+    return this.clientAuth()
+  }
+
   clientAuth () {
     return this._doRequest(this._authTokenUri('client_credentials'))
   }
