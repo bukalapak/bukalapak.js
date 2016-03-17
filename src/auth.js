@@ -8,6 +8,7 @@ class Auth {
     this.client = client
     this.options = {
       isBlank (key) { return isBlank(this[key]) },
+      validate (keys, message) { keys.forEach((key) => { if (this.isBlank(key)) { throw new Error(message) } }) },
       toParams () {
         return {
           client_id: this.clientId,
@@ -27,9 +28,7 @@ class Auth {
       if (!isBlank(options[val])) { this.options[val] = options[val] }
     })
 
-    if (this.options.isBlank('clientId') && this.options.isBlank('clientSecret')) {
-      throw new Error('Please set valid `clientId` and `clientSecret` options')
-    }
+    this.options.validate(['clientId', 'clientSecret'], 'Please set valid `clientId` and `clientSecret` options')
   }
 
   registerAdapter () {
@@ -140,10 +139,7 @@ class Auth {
   }
 
   _passwordBuilder () {
-    if (this.options.isBlank('username') && this.options.isBlank('password')) {
-      throw new Error('Unable to perform resource owner password credentials request')
-    }
-
+    this.options.validate(['username', 'password'], 'Unable to perform resource owner password credentials request')
     return Object.assign({}, this.options.toParams(), this.options.authPair(), { grant_type: 'password' })
   }
 
