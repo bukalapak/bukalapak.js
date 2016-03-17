@@ -8,7 +8,7 @@ import queryString from 'query-string'
 
 chai.use(chaiAsPromised)
 
-const app = require('./app')
+const app = require('./app').app
 
 let LocalStorage = require('node-localstorage').LocalStorage
 let localStorage = new LocalStorage('./local_storage')
@@ -58,27 +58,6 @@ describe('Bukalapak', () => {
     it('should throw an error if options is not an object', () => {
       expect(() => { client.get('', []) }).to.throw(Error, '`options` must be an object')
       expect(() => { client.get('', 11) }).to.throw(Error, '`options` must be an object')
-    })
-  })
-
-  describe('oauth methods', () => {
-    let oauthParams = { clientId: 'abcdef', clientSecret: 1234567, scope: 'public user' }
-    let client = new Bukalapak(options)
-
-    client.useAuthAdapter(oauthParams)
-
-    describe('clientCredentials', () => {
-      let url = '/oauth/token?client_id=abcdef&client_secret=1234567&grant_type=client_credentials&scope=public'
-      expect(client.auth.clientCredentials()).to.equal(url)
-    })
-
-    describe('refreshToken', () => {
-      expect(() => { client.auth.refreshToken() }).to.throw(Error, 'Unable to perform refresh_token request')
-    })
-
-    describe('passwordCredentials', () => {
-      let url = '/oauth/token?client_id=abcdef&client_secret=1234567&grant_type=password&scope=public%20user'
-      expect(client.auth.passwordCredentials()).to.equal(url)
     })
   })
 

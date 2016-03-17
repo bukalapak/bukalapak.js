@@ -5,10 +5,12 @@ import Auth from './auth'
 
 const API_VERSION = 'v4'
 const METHODS = ['get', 'put', 'del', 'post', 'head', 'opts']
+const AVAILABLE_ADAPTERS = { auth: Auth }
 
 class Bukalapak {
   constructor (options = {}) {
     this.options = {}
+    this.adapters = []
     this.headers = {
       'Accept': `application/vnd.bukalapak.${API_VERSION}+json`
     }
@@ -30,8 +32,10 @@ class Bukalapak {
     })
   }
 
-  useAuthAdapter (options) {
-    this.auth = new Auth(this, options)
+  useAdapter (name, options) {
+    this.adapters.push(name)
+    this[name] = new AVAILABLE_ADAPTERS[name](this, options)
+    return this[name].registerAdapter()
   }
 
   _request (method) {
@@ -53,6 +57,12 @@ class Bukalapak {
       if (opts.method === 'POST' && isUndefined(opts.body)) {
         opts.body = ''
       }
+
+      this.adapters.forEach((adapter) => {
+        if (typeof this[adapter].formatRequest === 'function') {
+          opts = this[adapter].formatRequest(opts)
+        }
+      })
 
       return this._fetch(reqUrl, opts)
     }

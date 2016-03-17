@@ -32,16 +32,66 @@ class Auth {
     }
   }
 
-  clientCredentials () {
-    return OAUTH_TOKEN_PATH + '?' + this._authTokenQuery('client_credentials')
+  registerAdapter () {
+    return this.clientAuth()
+  }
+
+  login (username, password) {
+    if (isBlank(username) && isBlank(password)) {
+      throw new Error('Please set valid `username` and `password`')
+    }
+
+    this.options.username = username
+    this.options.password = password
+    return this.userAuth()
+  }
+
+  clientAuth () {
+    return this._doRequest(this._authTokenUri('client_credentials'))
+  }
+
+  userAuth () {
+    return this._doRequest(this._authTokenUri('password'))
   }
 
   refreshToken () {
-    return OAUTH_TOKEN_PATH + '?' + this._authTokenQuery('refresh_token')
+    return this._doRequest(this._authTokenUri('refresh_token'))
   }
 
-  passwordCredentials () {
-    return OAUTH_TOKEN_PATH + '?' + this._authTokenQuery('password')
+  formatRequest (options) {
+    let token = this._accessToken()
+
+    if (!isBlank(token.access_token)) {
+      options.headers['Authorization'] = `Bearer ${token.access_token}`
+    }
+
+    return options
+  }
+
+  _accessToken () {
+    let token = this.client.storage.getItem('access_token')
+
+    if (typeof token !== 'object') { token = {} }
+
+    return Object.assign({}, token, {
+      isExpired () {
+        return (this.created_at + this.expires_in) <= this.now()
+      },
+
+      now () {
+        return Date.now()
+      }
+    })
+  }
+
+  _doRequest (uri) {
+    return this.client.post(uri)
+      .then((response) => { return response.json() })
+      .then((data) => { this.client.storage.setItem('access_token', data); return data })
+  }
+
+  _authTokenUri (tokenGrant) {
+    return this._token_path() + '?' + this._authTokenQuery(tokenGrant)
   }
 
   _authTokenQuery (tokenGrant) {
@@ -78,11 +128,19 @@ class Auth {
   }
 
   _passwordBuilder () {
+    if (this.options.isBlank('username') && this.options.isBlank('password')) {
+      throw new Error('Unable to perform resource owner password credentials request')
+    }
+
     return Object.assign({}, this.options.toParams(), this.options.authPair(), { grant_type: 'password' })
   }
 
   _validOptionKeys () {
-    return ['clientId', 'clientSecret', 'username', 'password', 'scope']
+    return ['clientId', 'clientSecret', 'username', 'password', 'scope', 'tokenPath']
+  }
+
+  _token_path () {
+    return this.options.tokenPath || OAUTH_TOKEN_PATH
   }
 }
 

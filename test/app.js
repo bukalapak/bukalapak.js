@@ -19,6 +19,29 @@ function isUndefined (thing) {
 let app = express()
 let extended = { extended: false }
 
+let validResponse = {
+  clientCredentials: {
+    access_token: '482c2ce503090f3b3b74a388349ebfb515a7885faf0faa777e48a40ee3ebe8bc',
+    token_type: 'bearer',
+    expires_in: 7200,
+    scope: 'public'
+  },
+  password: {
+    access_token: '6ec2209e6387f56d865404b2ce1300a83f1d1882110a314310eac9d44f8517cb',
+    token_type: 'bearer',
+    expires_in: 7200,
+    refresh_token: 'f130a5f7057f8942a913654692a1aa1226a61ee334705494cfa8dd5f541d447d',
+    scope: 'public user'
+  },
+  refreshToken: {
+    access_token: '744854d94e61dad0fd581428812d43436283e54b1e0ed57e5325315d9080dff1',
+    token_type: 'bearer',
+    expires_in: 7200,
+    refresh_token: '20f5cb01963619d542330844b9b3fdb532fd3ded76cbe9145cfc470fff2fa788',
+    scope: 'public user'
+  }
+}
+
 app.use(bodyParser.json(extended))
 
 app.all('/tests/unauthorized', (req, res, next) => {
@@ -41,30 +64,16 @@ app.get('/tests/http-headers', (req, res, next) => {
   res.status(200).json({ accept: req.headers.accept, 'user-agent': req.headers['user-agent'] })
 })
 
-app.post('/tests/oauth-token', (req, res, next) => {
-  let validResponse = {
-    clientCredentials: {
-      access_token: '482c2ce503090f3b3b74a388349ebfb515a7885faf0faa777e48a40ee3ebe8bc',
-      token_type: 'bearer',
-      expires_in: 7200,
-      scope: 'public'
-    },
-    password: {
-      access_token: '6ec2209e6387f56d865404b2ce1300a83f1d1882110a314310eac9d44f8517cb',
-      token_type: 'bearer',
-      expires_in: 7200,
-      refresh_token: 'f130a5f7057f8942a913654692a1aa1226a61ee334705494cfa8dd5f541d447d',
-      scope: 'public user'
-    },
-    refreshToken: {
-      access_token: '744854d94e61dad0fd581428812d43436283e54b1e0ed57e5325315d9080dff1',
-      token_type: 'bearer',
-      expires_in: 7200,
-      refresh_token: '20f5cb01963619d542330844b9b3fdb532fd3ded76cbe9145cfc470fff2fa788',
-      scope: 'public user'
-    }
-  }
+app.route('/tests/request-token')
+  .get((req, res, next) => {
+    res.status(200).json({ accept: req.headers.accept, authorization: req.headers.authorization })
+  })
+  .post((req, res, next) => {
+    console.log(req)
+    res.status(200).json({ accept: req.headers.accept, params: req.params })
+  })
 
+app.post('/tests/oauth-token', (req, res, next) => {
   let errorResponse = {
     invalidClient: {
       error: 'invalid_client',
@@ -106,4 +115,7 @@ app.post('/tests/oauth-token', (req, res, next) => {
   res.status(401).json(errorResponse.invalidGrant)
 })
 
-module.exports = app
+module.exports = {
+  app,
+  validResponse
+}
