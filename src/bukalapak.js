@@ -2,10 +2,11 @@ import fetch from 'isomorphic-fetch'
 import { transformUrl, isObject, isString, isUndefined } from './util'
 import Storage from './storage'
 import Auth from './auth'
+import Api from './api'
 
 const API_VERSION = 'v4'
 const METHODS = ['get', 'put', 'del', 'post', 'head', 'opts']
-const AVAILABLE_ADAPTERS = { auth: Auth }
+const AVAILABLE_ADAPTERS = { auth: Auth, api: Api }
 
 class Bukalapak {
   constructor (options = {}) {
@@ -31,7 +32,7 @@ class Bukalapak {
     })
   }
 
-  useAdapter (name, options) {
+  useAdapter (name, options = {}) {
     this[name] = new AVAILABLE_ADAPTERS[name](this, options)
     return this[name].registerAdapter()
   }

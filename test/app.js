@@ -90,7 +90,6 @@ app.route('/tests/request-token')
     res.status(200).json({ accept: req.headers.accept, authorization: req.headers.authorization })
   })
   .post((req, res, next) => {
-    console.log(req)
     res.status(200).json({ accept: req.headers.accept, params: req.params })
   })
 
@@ -140,6 +139,10 @@ app.post('/tests/expired-token', (req, res, next) => {
   }
 
   res.status(401).json(errorResponse.invalidGrant)
+})
+
+app.get('/me', (req, res, next) => {
+  res.status(200).json({ accept: req.headers.accept, foo: req.query.foo })
 })
 
 module.exports = {
