@@ -25,7 +25,7 @@ class Bukalapak {
     if (!options.storage) {
       throw new Error('`storage` option is required')
     } else {
-      this.storage = new Storage(options.storage)
+      this.storage = new Storage(options.storage, options.storageOptions)
     }
 
     METHODS.forEach((method) => {
