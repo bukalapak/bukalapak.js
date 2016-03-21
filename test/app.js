@@ -1,29 +1,29 @@
-import express from 'express'
-import bodyParser from 'body-parser'
+import express from 'express';
+import bodyParser from 'body-parser';
 
-let fs = require('fs')
-let path = require('path')
+let fs = require('fs');
+let path = require('path');
 
 function loadFixture (filename) {
-  return fs.readFileSync(path.join(__dirname, 'fixtures', filename), { encoding: 'utf8' })
+  return fs.readFileSync(path.join(__dirname, 'fixtures', filename), { encoding: 'utf8' });
 }
 
 function formatResponse (hash, options = {}) {
-  let date = Date.now()
+  let date = Date.now();
 
   if (options.expired) {
-    date = date - 9600
+    date = date - 9600;
   }
 
-  return Object.assign({}, hash, { created_at: date })
+  return Object.assign({}, hash, { created_at: date });
 }
 
 function isUndefined (thing) {
-  return (typeof thing === 'undefined')
+  return (typeof thing === 'undefined');
 }
 
-let app = express()
-let extended = { extended: false }
+let app = express();
+let extended = { extended: false };
 
 let validResponse = {
   clientCredentials: {
@@ -46,7 +46,7 @@ let validResponse = {
     refresh_token: '20f5cb01963619d542330844b9b3fdb532fd3ded76cbe9145cfc470fff2fa788',
     scope: 'public user'
   }
-}
+};
 
 let errorResponse = {
   invalidClient: {
@@ -61,91 +61,92 @@ let errorResponse = {
     error: 'invalid_grant',
     error_description: 'The provided authorization grant is invalid, expired, revoked, does not match the redirection URI used in the authorization request, or was issued to another client.'
   }
-}
+};
 
-app.use(bodyParser.json(extended))
+app.use(bodyParser.json(extended));
 
 app.all('/tests/unauthorized', (req, res, next) => {
-  res.status(401).send(loadFixture('unauthorized_error.json'))
-})
+  res.status(401).send(loadFixture('unauthorized_error.json'));
+});
 
 app.post('/tests/post-blank-data', (req, res, next) => {
-  res.status(201).send({ body: req.body })
-})
+  res.status(201).send({ body: req.body });
+});
 
 app.all('/tests/methods', (req, res, next) => {
-  res.status(202).json({ method: req.method })
-})
+  res.status(202).json({ method: req.method });
+});
 
 app.get('/tests/domain', (req, res, next) => {
-  res.status(200).json({ host: req.headers.host })
-})
+  res.status(200).json({ host: req.headers.host });
+});
 
 app.get('/tests/http-headers', (req, res, next) => {
-  res.status(200).json({ accept: req.headers.accept, 'user-agent': req.headers['user-agent'] })
-})
+  res.status(200).json({ accept: req.headers.accept, 'user-agent': req.headers['user-agent'] });
+});
 
 app.route('/tests/request-token')
   .get((req, res, next) => {
-    res.status(200).json({ accept: req.headers.accept, authorization: req.headers.authorization })
+    res.status(200).json({ accept: req.headers.accept, authorization: req.headers.authorization });
   })
   .post((req, res, next) => {
-    res.status(200).json({ accept: req.headers.accept, params: req.params })
-  })
+    res.status(200).json({ accept: req.headers.accept, params: req.params });
+  });
 
 app.post('/tests/oauth-token', (req, res, next) => {
   if (req.query.client_id === '' || req.query.client_secret === '') {
-    return res.status(401).json(errorResponse.invalidClient)
+    return res.status(401).json(errorResponse.invalidClient);
   }
 
   switch (req.query.grant_type) {
     case 'client_credentials':
       if (req.query.scope !== 'public') {
-        return res.status(401).json(errorResponse.invalidScope)
+        return res.status(401).json(errorResponse.invalidScope);
       } else {
-        return res.status(200).json(formatResponse(validResponse.clientCredentials))
+        return res.status(200).json(formatResponse(validResponse.clientCredentials));
       }
+      break;
     case 'password':
       if (!(isUndefined(req.query.username) || isUndefined(req.query.password))) {
-        return res.status(200).json(formatResponse(validResponse.password))
+        return res.status(200).json(formatResponse(validResponse.password));
       }
-      break
+      break;
     case 'refresh_token':
       if (!(isUndefined(req.query.access_token) || isUndefined(req.query.refresh_token))) {
-        return res.status(200).json(formatResponse(validResponse.refreshToken))
+        return res.status(200).json(formatResponse(validResponse.refreshToken));
       }
-      break
+      break;
   }
 
-  res.status(401).json(errorResponse.invalidGrant)
-})
+  res.status(401).json(errorResponse.invalidGrant);
+});
 
 app.post('/tests/expired-token', (req, res, next) => {
   if (req.query.client_id === '' || req.query.client_secret === '') {
-    return res.status(401).json(errorResponse.invalidClient)
+    return res.status(401).json(errorResponse.invalidClient);
   }
 
   switch (req.query.grant_type) {
     case 'password':
       if (!(isUndefined(req.query.username) || isUndefined(req.query.password))) {
-        return res.status(200).json(formatResponse(validResponse.password, { expired: true }))
+        return res.status(200).json(formatResponse(validResponse.password, { expired: true }));
       }
-      break
+      break;
     case 'refresh_token':
       if (!(isUndefined(req.query.access_token) || isUndefined(req.query.refresh_token))) {
-        return res.status(200).json(formatResponse(validResponse.refreshToken))
+        return res.status(200).json(formatResponse(validResponse.refreshToken));
       }
-      break
+      break;
   }
 
-  res.status(401).json(errorResponse.invalidGrant)
-})
+  res.status(401).json(errorResponse.invalidGrant);
+});
 
 app.get('/me', (req, res, next) => {
-  res.status(200).json({ accept: req.headers.accept, foo: req.query.foo })
-})
+  res.status(200).json({ accept: req.headers.accept, foo: req.query.foo });
+});
 
 module.exports = {
   app,
   validResponse
-}
+};

@@ -4,7 +4,7 @@
   "description": "Bukalapak API javascript wrapper",
   "main": "lib/bukalapak.js",
   "scripts": {
-    "lint": "snazzy --verbose || exit 0",
+    "lint": "semistandard --verbose | snazzy || exit 0",
     "build": "babel src -d lib",
     "clean": "rimraf lib",
     "test": "mocha test --compilers js:babel-core/register",
@@ -35,7 +35,7 @@
     "node-localstorage": "^1.1.2",
     "rimraf": "^2.5.2",
     "snazzy": "^3.0.0",
-    "standard": "^6.0.7"
+    "semistandard": "^7.0.5"
   },
   "standard": {
     "globals": [
