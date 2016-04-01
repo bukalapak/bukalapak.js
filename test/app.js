@@ -9,7 +9,7 @@ function loadFixture (filename) {
 }
 
 function formatResponse (hash, options = {}) {
-  let date = Date.now();
+  let date = Date.now() / 1000;
 
   if (options.expired) {
     date = date - 9600;

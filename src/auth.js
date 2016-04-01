@@ -96,7 +96,8 @@ class Auth {
 
     return Object.assign({}, token || {}, {
       isExpired () {
-        return (this.created_at + this.expires_in) <= this.now();
+        let expiration = (this.created_at + this.expires_in) * 1000;
+        return expiration <= this.now();
       },
 
       now () {
