@@ -39,6 +39,7 @@ describe('integration', () => {
       expect(promise).to.eventually.have.property('expires_in', 7200),
       expect(promise).to.eventually.have.property('scope', 'public'),
       expect(promise).to.eventually.have.property('access_token'),
+      expect(promise).to.eventually.not.have.property('refresh_token'),
       expect(promise).to.eventually.have.property('created_at')
     ]);
   });
@@ -63,20 +64,32 @@ describe('integration', () => {
       expect(promise).to.eventually.have.property('expires_in', 7200),
       expect(promise).to.eventually.have.property('scope', 'public user'),
       expect(promise).to.eventually.not.have.property('access_token', clientToken.access_token),
-      expect(promise).to.eventually.have.property('created_at'),
-      expect(promise).to.eventually.have.property('refresh_token')
+      expect(promise).to.eventually.have.property('refresh_token'),
+      expect(promise).to.eventually.have.property('created_at')
     ]);
   });
 
   it('use api adapter (as user)', () => {
-    client.useAdapter('api');
-
     let promise = client.api.me().then((response) => { return response.json(); });
 
     return Promise.all([
       expect(promise).to.eventually.have.property('username', 'subosito'),
       expect(promise).to.eventually.have.property('name', 'Alif Rachmawadi'),
       expect(promise).to.eventually.have.property('email', 'subosito@bukalapak.com')
+    ]);
+  });
+
+  it('use api adapter (as client after user logged out)', () => {
+    let userToken = client.storage.getItem('access_token');
+    let promise = client.auth.logout().then(() => { return client.storage.getItem('access_token'); });
+
+    return Promise.all([
+      expect(promise).to.eventually.have.property('token_type', 'bearer'),
+      expect(promise).to.eventually.have.property('expires_in', 7200),
+      expect(promise).to.eventually.have.property('scope', 'public'),
+      expect(promise).to.eventually.not.have.property('access_token', userToken.access_token),
+      expect(promise).to.eventually.not.have.property('refresh_token'),
+      expect(promise).to.eventually.have.property('created_at')
     ]);
   });
 });
