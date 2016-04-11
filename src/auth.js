@@ -86,8 +86,12 @@ class Auth {
       }
     })
       .then(formatOptions)
-      .catch(() => {
-        return this.refreshToken().then(formatOptions);
+      .catch((token) => {
+        if (!isBlank(token.refresh_token)) {
+          return this.refreshToken().then(formatOptions);
+        } else {
+          return new Promise((resolve, reject) => { resolve(formatOptions(token)); });
+        }
       });
   }
 
