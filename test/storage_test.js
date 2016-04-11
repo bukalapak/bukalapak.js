@@ -22,6 +22,7 @@ describe('Storage', () => {
     before(() => {
       storage.setItem('foo', 'bar');
     });
+
     after(() => {
       storage.removeItem('foo');
     });
@@ -55,6 +56,7 @@ describe('Storage', () => {
     before(() => {
       storage.storage.setItem('foo', '{"foo":"bar"}');
     });
+
     after(() => {
       storage.removeItem('foo');
     });

@@ -86,6 +86,7 @@ describe('Bukalapak', () => {
     before((done) => {
       server = app.listen({ port: 8088 }, done);
     });
+
     after((done) => {
       server.close(done);
     });

@@ -69,9 +69,11 @@ describe('auth adapter: token', () => {
   before((done) => {
     server = app.listen({ port: 8088 }, done);
   });
+
   after((done) => {
     server.close(done);
   });
+
   beforeEach((done) => {
     client.useAdapter('auth', Object.assign({}, { tokenPath: '/tests/oauth-token' }, oauthParams)).then(() => {
       done();
@@ -145,9 +147,11 @@ describe('auth adapter: auto refresh token', () => {
   before((done) => {
     server = app.listen({ port: 8088 }, done);
   });
+
   after((done) => {
     server.close(done);
   });
+
   beforeEach((done) => {
     client.useAdapter('auth', Object.assign({}, { tokenPath: '/tests/expired-token' }, oauthParams)).then(() => {
       done();
@@ -172,6 +176,44 @@ describe('auth adapter: auto refresh token', () => {
       let wanted = {
         accept: 'application/vnd.bukalapak.v4+json',
         authorization: `Bearer ${validResponse.refreshToken.access_token}`
+      };
+
+      expect(promise).to.eventually.eql(wanted).notify(done);
+    });
+  });
+});
+
+describe('auth adapter: auto refresh token with client credentials token)', () => {
+  let client = new Bukalapak(options);
+  let server;
+
+  before((done) => {
+    server = app.listen({ port: 8088 }, done);
+  });
+
+  after((done) => {
+    server.close(done);
+  });
+
+  beforeEach((done) => {
+    client.useAdapter('auth', Object.assign({}, { tokenPath: '/tests/expired-token' }, oauthParams)).then(() => {
+      done();
+    });
+  });
+
+  afterEach(() => {
+    return Promise.all([ localStorage.removeItem('access_token') ]);
+  });
+
+  describe('resource owner password', () => {
+    it('should not auto-refresh client credentials token', (done) => {
+      let promise = client.get('/tests/request-token').then((response) => {
+        return response.json();
+      });
+
+      let wanted = {
+        accept: 'application/vnd.bukalapak.v4+json',
+        authorization: `Bearer ${validResponse.clientCredentials.access_token}`
       };
 
       expect(promise).to.eventually.eql(wanted).notify(done);

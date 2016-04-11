@@ -127,6 +127,8 @@ app.post('/tests/expired-token', (req, res, next) => {
   }
 
   switch (req.query.grant_type) {
+    case 'client_credentials':
+      return res.status(200).json(formatResponse(validResponse.clientCredentials, { expired: true }));
     case 'password':
       if (!(isUndefined(req.query.username) || isUndefined(req.query.password))) {
         return res.status(200).json(formatResponse(validResponse.password, { expired: true }));

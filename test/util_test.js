@@ -18,15 +18,9 @@ describe('transformUrl()', () => {
   });
 
   it('should return error when arguments are invalid', () => {
-    expect(() => {
-      transformUrl({}, 'www');
-    }).throw(Error, '`baseUrl` and `subdomain` must be a string');
-    expect(() => {
-      transformUrl('', {});
-    }).throw(Error, '`baseUrl` and `subdomain` must be a string');
-    expect(() => {
-      transformUrl('not-url', 'www');
-    }).throw(Error, 'not-url is not valid url');
+    expect(() => { transformUrl({}, 'www'); }).throw(Error, '`baseUrl` and `subdomain` must be a string');
+    expect(() => { transformUrl('', {}); }).throw(Error, '`baseUrl` and `subdomain` must be a string');
+    expect(() => { transformUrl('not-url', 'www'); }).throw(Error, 'not-url is not valid url');
   });
 });
 
