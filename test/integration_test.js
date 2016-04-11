@@ -50,8 +50,8 @@ describe('integration', () => {
     let promise = client.api.products().then((response) => { return response.json(); });
 
     return Promise.all([
-      expect(promise).to.eventually.have.property('products'),
-      expect(promise).to.eventually.have.property('metadata')
+      expect(promise).to.eventually.have.property('data'),
+      expect(promise).to.eventually.have.property('meta')
     ]);
   });
 
@@ -73,9 +73,10 @@ describe('integration', () => {
     let promise = client.api.me().then((response) => { return response.json(); });
 
     return Promise.all([
-      expect(promise).to.eventually.have.property('username', 'subosito'),
-      expect(promise).to.eventually.have.property('name', 'Alif Rachmawadi'),
-      expect(promise).to.eventually.have.property('email', 'subosito@bukalapak.com')
+      expect(promise).to.eventually.have.deep.property('data.username', 'subosito'),
+      expect(promise).to.eventually.have.deep.property('data.name', 'Alif Rachmawadi'),
+      expect(promise).to.eventually.have.deep.property('data.email', 'subosito@bukalapak.com'),
+      expect(promise).to.eventually.have.property('meta')
     ]);
   });
 
