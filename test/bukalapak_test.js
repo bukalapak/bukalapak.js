@@ -120,7 +120,7 @@ describe('Bukalapak', () => {
       return Promise.all([
         expect(promise).to.eventually.have.deep.property('errors[0].message', 'You are not authorized'),
         expect(promise).to.eventually.have.deep.property('errors[0].code', 10001),
-        expect(promise).to.eventually.have.deep.property('metadata.http_status', 401)
+        expect(promise).to.eventually.have.deep.property('meta.http_status', 401)
       ]);
     });
 
