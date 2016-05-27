@@ -56,9 +56,9 @@ describe('auth adapter', () => {
   it('using custom subdomain', (done) => {
     localStorage.removeItem('access_token');
     let client = new Bukalapak(options);
-    client.useAdapter('auth', Object.assign({}, oauthParams, { subdomain: 'www' }));
+    client.useAdapter('auth', Object.assign({}, oauthParams, { subdomain: 'accounts' }));
 
-    expect(client.auth.clientAuth()).to.eventually.be.rejectedWith(Error, /www.localhost/).notify(done);
+    expect(client.auth.clientAuth()).to.eventually.be.rejectedWith(Error, /accounts.localhost/).notify(done);
   });
 });
 
