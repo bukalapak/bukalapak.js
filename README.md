@@ -31,6 +31,40 @@ client.api.me(); // shortcut
 
 // remove username and password pair, and use client_credentials token instead
 client.auth.logout();
+
+// That's it!
+
+// Bonus: full example on how to handle promise based response
+function logResponse (response) {
+  console.log(response.status);
+  console.log(response.statusText);
+  console.log(response.headers.get('Content-Type'));
+  console.log('---------------------------');
+
+  return response;
+}
+
+function checkStatus (response) {
+  if (response.status >= 200 && response.status < 300) {
+    return response;
+  } else {
+    var error = new Error(response.statusText);
+    error.response = response;
+    throw error;
+  }
+}
+
+function parseJSON (response) {
+  return response.json();
+}
+
+client.api.products({ keywords: 'thinkpad' })
+  .then(logResponse)
+  .then(checkStatus)
+  .then(parseJSON)
+  .then(function (data) { console.log(data); })
+  .catch(function (error) { console.log('ERROR: ', error); });
+
 ```
 
 There are two optional dependencies depends on your usage:
