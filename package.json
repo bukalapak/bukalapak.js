@@ -17,7 +17,6 @@
   },
   "author": "Alif Rachmawadi <subosito@bukalapak.com>",
   "license": "MIT",
-  "private": true,
   "dependencies": {
     "isomorphic-fetch": "^2.2.1",
     "query-string": "^3.0.1"
