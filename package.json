@@ -1,6 +1,6 @@
 {
-  "name": "bukalapak-js",
-  "version": "0.0.0",
+  "name": "bukalapak",
+  "version": "0.0.1",
   "description": "Bukalapak API javascript wrapper",
   "main": "lib/bukalapak.js",
   "scripts": {
