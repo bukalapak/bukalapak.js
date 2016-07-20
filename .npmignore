@@ -1,2 +1,7 @@
+bower_components
+coverage
+local_storage
+node_modules
+npm-debug.log
 src
 test
