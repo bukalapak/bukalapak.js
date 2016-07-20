@@ -11,26 +11,26 @@ Bukalapak API javascript wrapper.
 
 ```javascript
 // initialization
-let client = new Bukalapak({ baseUrl: 'https://api.bukalapak.com/', storage: localStorage })
+let client = new Bukalapak({ baseUrl: 'https://api.bukalapak.com/', storage: localStorage });
 
 // use auth adapter and api adapter
-client.useAdapter('auth', { clientId: 'abcdef', clientSecret: '1234567', subdomain: 'accounts' })
-client.useAdapter('api')
+client.useAdapter('auth', { clientId: 'abcdef', clientSecret: '1234567', subdomain: 'accounts' });
+client.useAdapter('api');
 
 // read-only operation, return promise and auto include `Authorization` header with token from client_credentials
-client.get('/products', { query: { keywords: 'thinkpad' } })
-client.api.products({ keywords: 'thinkpad' }) // shortcut
+client.get('/products', { query: { keywords: 'thinkpad' } });
+client.api.products({ keywords: 'thinkpad' }); // shortcut
 
 // client, now have `auth` method
-client.auth.login('subosito@bukalapak.com', 's3cr3t-p4ssw0rd')
+client.auth.login('subosito@bukalapak.com', 's3cr3t-p4ssw0rd');
 
 // accessing endpoint, return promise and auto include `Authorization` header with token from resource_owner_password
 // it will auto-refresh token when it's expired.
-client.get('/me')
-client.api.me() // shortcut
+client.get('/me');
+client.api.me(); // shortcut
 
 // remove username and password pair, and use client_credentials token instead
-client.auth.logout()
+client.auth.logout();
 ```
 
 There are two optional dependencies depends on your usage:
@@ -45,14 +45,14 @@ If you want to have storage support on node, then you can use [node-localstorage
 
 
 ```javascript
-let LocalStorage = require('node-localstorage').LocalStorage
-let localStorage = new LocalStorage('./local_storage')
-let client = new Bukalapak({ baseUrl: 'https://api.bukalapak.com/', storage: localStorage })
+let LocalStorage = require('node-localstorage').LocalStorage;
+let localStorage = new LocalStorage('./local_storage');
+let client = new Bukalapak({ baseUrl: 'https://api.bukalapak.com/', storage: localStorage });
 ```
 
 Or if you want to use more advanced storage like [localForage](https://github.com/mozilla/localForage), then you can do:
 
 ```javascript
-let storage = localforage.createInstance({ name: 'bukalapak' })
-let client = new Bukalapak({ baseUrl: 'https://api.bukalapak.com/', storage: storage, storageOptions: { serialize: false } })
+let storage = localforage.createInstance({ name: 'bukalapak' });
+let client = new Bukalapak({ baseUrl: 'https://api.bukalapak.com/', storage: storage, storageOptions: { serialize: false } });
 ```
