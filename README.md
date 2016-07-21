@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/bukalapak/bukalapak.js.svg?branch=master)](https://travis-ci.org/bukalapak/bukalapak.js)
 [![Code Climate](https://codeclimate.com/github/bukalapak/bukalapak.js/badges/gpa.svg)](https://codeclimate.com/github/bukalapak/bukalapak.js)
-[![Test Coverage](https://codeclimate.com/github/bukalapak/bukalapak.js/badges/coverage.svg)](https://codeclimate.com/github/bukalapak/bukalapak.js/coverage)
+[![Test Coverage](https://codecov.io/gh/bukalapak/bukalapak.js/branch/master/graph/badge.svg)](https://codecov.io/gh/bukalapak/bukalapak.js)
 [![npm version](https://badge.fury.io/js/bukalapak.svg)](https://www.npmjs.com/package/bukalapak)
 
 Bukalapak API javascript wrapper.
