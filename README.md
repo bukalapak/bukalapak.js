@@ -1,6 +1,6 @@
 # bukalapak.js
 
-[![Circle CI](https://circleci.com/gh/bukalapak/bukalapak.js.svg?style=shield&circle-token=d8aa3d29804a92ce000a33c0372ac42d3ef99560)](https://circleci.com/gh/bukalapak/bukalapak.js)
+[![Build Status](https://travis-ci.org/bukalapak/bukalapak.js.svg?branch=master)](https://travis-ci.org/bukalapak/bukalapak.js)
 [![Code Climate](https://codeclimate.com/github/bukalapak/bukalapak.js/badges/gpa.svg)](https://codeclimate.com/github/bukalapak/bukalapak.js)
 [![Test Coverage](https://codeclimate.com/github/bukalapak/bukalapak.js/badges/coverage.svg)](https://codeclimate.com/github/bukalapak/bukalapak.js/coverage)
 [![npm version](https://badge.fury.io/js/bukalapak.svg)](https://www.npmjs.com/package/bukalapak)
