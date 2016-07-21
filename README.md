@@ -1,9 +1,9 @@
 # bukalapak.js
 
 [![Circle CI](https://circleci.com/gh/bukalapak/bukalapak.js.svg?style=shield&circle-token=d8aa3d29804a92ce000a33c0372ac42d3ef99560)](https://circleci.com/gh/bukalapak/bukalapak.js)
-[![Code Climate](https://codeclimate.com/repos/56cac426e6f128215f001042/badges/6d21f6edb6a5e05f155e/gpa.svg)](https://codeclimate.com/repos/56cac426e6f128215f001042/feed)
-[![Test Coverage](https://codeclimate.com/repos/56cac426e6f128215f001042/badges/6d21f6edb6a5e05f155e/coverage.svg)](https://codeclimate.com/repos/56cac426e6f128215f001042/coverage)
-[![npm](https://img.shields.io/npm/v/bukalapak.svg)](https://www.npmjs.com/package/bukalapak)
+[![Code Climate](https://codeclimate.com/github/bukalapak/bukalapak.js/badges/gpa.svg)](https://codeclimate.com/github/bukalapak/bukalapak.js)
+[![Test Coverage](https://codeclimate.com/github/bukalapak/bukalapak.js/badges/coverage.svg)](https://codeclimate.com/github/bukalapak/bukalapak.js/coverage)
+[![npm version](https://badge.fury.io/js/bukalapak.svg)](https://www.npmjs.com/package/bukalapak)
 
 Bukalapak API javascript wrapper.
 
