@@ -55,5 +55,16 @@ describe('api', () => {
         expect(promise).to.eventually.have.deep.property('foo', 'bar')
       ]);
     });
+
+    it('should return valid response with query and custom headers', () => {
+      let promise = client.api.me({ foo: 'bar' }, { headers: { 'Accept': 'application/json' } }).then((response) => {
+        return response.json();
+      });
+
+      return Promise.all([
+        expect(promise).to.eventually.have.deep.property('accept', 'application/json'),
+        expect(promise).to.eventually.have.deep.property('foo', 'bar')
+      ]);
+    });
   });
 });

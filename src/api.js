@@ -19,8 +19,8 @@ class Api {
   }
 
   _request (method, path) {
-    return (query = {}) => {
-      return this.client[method](path, { query: query });
+    return (query = {}, options = {}) => {
+      return this.client[method](path, Object.assign({ query: query }, options));
     };
   }
 }
