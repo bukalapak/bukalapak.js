@@ -1,5 +1,5 @@
 import fetch from 'isomorphic-fetch';
-import { transformUrl, isObject, isString, isUndefined } from './util';
+import { isObject, isString, isUndefined } from './util';
 import queryString from 'query-string';
 import Storage from './storage';
 import Auth from './auth';
@@ -48,13 +48,13 @@ class Bukalapak {
         headers: Object.assign({}, this.headers, options.headers || {})
       });
 
-      let subdomain = opts.subdomain;
-      delete opts.subdomain;
+      let baseUrl = opts.baseUrl;
+      delete opts.baseUrl;
 
       let query = opts.query;
       delete opts.query;
 
-      let reqUrl = this._generateUrl(path, subdomain, query);
+      let reqUrl = this._generateUrl(path, query, baseUrl);
 
       // ensure body always present for POST request
       if (opts.method === 'POST' && isUndefined(opts.body)) {
@@ -87,9 +87,9 @@ class Bukalapak {
     return fetch(...args);
   }
 
-  _generateUrl (path, subdomain, query = {}) {
-    let reqUrl = transformUrl(this.options.baseUrl, subdomain) + path;
-    let reqQuery = this._queryString(query);
+  _generateUrl (path, query = {}, baseUrl = null) {
+    let reqUrl = this._generateBaseUrl(baseUrl) + path;
+    let reqQuery = queryString.stringify(query);
 
     if (reqQuery !== '') {
       return reqUrl + `?${reqQuery}`;
@@ -98,8 +98,14 @@ class Bukalapak {
     }
   }
 
-  _queryString (query) {
-    return queryString.stringify(query);
+  _generateBaseUrl (baseUrl) {
+    baseUrl = baseUrl || this.options.baseUrl;
+
+    if (baseUrl.endsWith('/')) {
+      return baseUrl.slice(0, -1);
+    }
+
+    return baseUrl;
   }
 }
 

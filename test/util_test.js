@@ -1,28 +1,6 @@
 import { describe, it } from 'mocha';
 import { expect } from 'chai';
-import { transformUrl, isObject, isString, isUndefined, isBlank } from '../src/util';
-
-let baseUrl = 'https://api.bukalapak.com';
-
-describe('transformUrl()', () => {
-  it('should return baseUrl when subdomain is not supplied', () => {
-    expect(transformUrl(baseUrl)).eql(baseUrl);
-  });
-
-  it('should return modified baseUrl when subdomain passed', () => {
-    expect(transformUrl(baseUrl, 'accounts')).eql('https://accounts.bukalapak.com');
-  });
-
-  it('should handle hostname without domain properly', () => {
-    expect(transformUrl('http://localhost:8088', 'accounts')).eql('http://accounts.localhost:8088');
-  });
-
-  it('should return error when arguments are invalid', () => {
-    expect(() => { transformUrl({}, 'accounts'); }).throw(Error, '`baseUrl` and `subdomain` must be a string');
-    expect(() => { transformUrl('', {}); }).throw(Error, '`baseUrl` and `subdomain` must be a string');
-    expect(() => { transformUrl('not-url', 'accounts'); }).throw(Error, 'not-url is not valid url');
-  });
-});
+import { isObject, isString, isUndefined, isBlank } from '../src/util';
 
 describe('isObject()', () => {
   it('should be able to determine valid object', () => {

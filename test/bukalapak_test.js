@@ -124,9 +124,9 @@ describe('Bukalapak', () => {
       ]);
     });
 
-    it('should be able to switch baseUrl subdomain', (done) => {
+    it('should be able to switch baseUrl', (done) => {
       let client = new Bukalapak({ baseUrl: 'http://api.lvh.me:8088', storage: localStorage });
-      let promise = client.get('/tests/domain', { subdomain: 'accounts' }).then((response) => {
+      let promise = client.get('/tests/domain', { baseUrl: 'http://accounts.lvh.me:8088' }).then((response) => {
         return response.json();
       });
       expect(promise).to.eventually.eql({ host: 'accounts.lvh.me:8088' }).notify(done);
