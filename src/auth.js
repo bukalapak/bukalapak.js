@@ -79,7 +79,7 @@ class Auth {
     return new Promise((resolve, reject) => {
       let token = this._accessToken();
 
-      if (!isBlank(token) && token.isExpired() && !reqUrl.match('refresh_token=')) {
+      if (!isBlank(token) && token.isExpired()) {
         reject(token);
       } else {
         resolve(token);
@@ -87,10 +87,13 @@ class Auth {
     })
       .then(formatOptions)
       .catch((token) => {
-        if (!isBlank(token.refresh_token)) {
+        if (!isBlank(token.refresh_token) && !reqUrl.match('refresh_token=')) {
           return this.refreshToken().then(formatOptions);
         } else {
-          return new Promise((resolve, reject) => { resolve(formatOptions(token)); });
+          return new Promise((resolve, reject) => {
+            this.client.storage.removeItem('access_token');
+            this.clientAuth().then((token) => { resolve(formatOptions(token)); });
+          });
         }
       });
   }

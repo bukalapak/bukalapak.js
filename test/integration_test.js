@@ -93,4 +93,20 @@ describe('integration', () => {
       expect(promise).to.eventually.have.property('created_at')
     ]);
   });
+
+  it('automatically re-authenticate client when client credentials token is expired', () => {
+    let clientToken = client.storage.getItem('access_token');
+    clientToken.access_token = 'expired-token-value';
+    clientToken.created_at = 0;
+
+    client.storage.setItem('access_token', clientToken);
+
+    let promise = client.api.products().then((response) => { return response.json(); });
+
+    return Promise.all([
+      expect(promise).to.eventually.have.property('data'),
+      expect(promise).to.eventually.have.property('meta'),
+      expect(promise).to.eventually.have.deep.property('meta.http_status', 200)
+    ]);
+  });
 });
