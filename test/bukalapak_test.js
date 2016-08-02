@@ -79,6 +79,36 @@ describe('Bukalapak', () => {
     });
   });
 
+  describe('handling baseUrl', () => {
+    let server;
+
+    before((done) => {
+      server = app.listen({ port: 8088 }, done);
+    });
+
+    after((done) => {
+      server.close(done);
+    });
+
+    it('should able to perform get request with baseUrl without trailing slash', (done) => {
+      let options = { baseUrl: 'http://localhost:8088', storage: localStorage };
+      let client = new Bukalapak(options);
+      let promise = client.get('/tests/methods').then((response) => {
+        return response.json();
+      });
+      expect(promise).to.eventually.have.deep.property('method', 'GET').notify(done);
+    });
+
+    it('should able to perform get request with baseUrl with trailing slash', (done) => {
+      let options = { baseUrl: 'http://localhost:8088/', storage: localStorage };
+      let client = new Bukalapak(options);
+      let promise = client.get('/tests/methods').then((response) => {
+        return response.json();
+      });
+      expect(promise).to.eventually.have.deep.property('method', 'GET').notify(done);
+    });
+  });
+
   describe('http interactions', () => {
     let server;
     let client = new Bukalapak(options);
