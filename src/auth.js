@@ -111,7 +111,7 @@ class Auth {
   }
 
   _doRequest (uri) {
-    return this.client.post(uri, { baseUrl: this.options.authUrl || this.client.options.baseUrl })
+    return this.client.post(uri, { baseUrl: this.options.baseUrl || this.client.options.baseUrl })
       .then((response) => {
         return response.json();
       })
@@ -163,7 +163,7 @@ class Auth {
   }
 
   _validOptionKeys () {
-    return ['clientId', 'clientSecret', 'username', 'password', 'scope', 'tokenPath', 'authUrl'];
+    return ['clientId', 'clientSecret', 'username', 'password', 'scope', 'tokenPath', 'baseUrl'];
   }
 
   _token_path () {

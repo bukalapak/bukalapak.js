@@ -16,7 +16,7 @@ let oauthParams = {
   clientId: 'fdd65d2cbf8697b05722ed77c37b2f8d0b77ec08952574acc37dc904081be49e',
   clientSecret: '14924d9b892dee0c33259ceab9b881622209a597c8bae032358c44cf2daeb357',
   scope: 'public user',
-  authUrl: 'http://accounts.blstage2.org'
+  baseUrl: 'http://accounts.blstage2.org'
 };
 
 describe('integration', () => {
