@@ -144,6 +144,10 @@ app.post('/tests/expired-token', (req, res, next) => {
   res.status(401).json(errorResponse.invalidGrant);
 });
 
+app.post('/tests/oauth-token-options', (req, res, next) => {
+  return res.status(200).json({ host: req.headers.host, custom: req.headers.custom });
+});
+
 app.get('/me', (req, res, next) => {
   res.status(200).json({ accept: req.headers.accept, foo: req.query.foo });
 });

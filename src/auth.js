@@ -28,8 +28,14 @@ class Auth {
       }
     };
 
-    this._validOptionKeys().forEach((val) => {
-      if (!isBlank(options[val])) { this.options[val] = options[val]; }
+    this.options.fetchOptions = {};
+
+    Object.keys(options).forEach((key) => {
+      if (this._validOptionKeys().includes(key)) {
+        this.options[key] = options[key];
+      } else {
+        this.options.fetchOptions[key] = options[key];
+      }
     });
 
     this.options.validate(['clientId', 'clientSecret'], 'Please set valid `clientId` and `clientSecret` options');
@@ -114,7 +120,10 @@ class Auth {
   }
 
   _doRequest (uri) {
-    return this.client.post(uri, { baseUrl: this.options.baseUrl || this.client.options.baseUrl })
+    let fetchOptions = Object.assign({}, this.options.fetchOptions,
+        { baseUrl: this.options.baseUrl || this.client.options.baseUrl });
+
+    return this.client.post(uri, fetchOptions)
       .then((response) => {
         return response.json();
       })

@@ -52,13 +52,35 @@ describe('auth adapter', () => {
       client.auth.userAuth();
     }).to.throw(Error, 'Unable to perform resource owner password credentials request');
   });
+});
+
+describe('auth adapter: custom options', () => {
+  let server;
+
+  before((done) => {
+    server = app.listen({ port: 8088 }, done);
+  });
+
+  after((done) => {
+    server.close(done);
+  });
 
   it('using custom baseUrl', (done) => {
-    localStorage.removeItem('access_token');
     let client = new Bukalapak(options);
-    client.useAdapter('auth', Object.assign({}, oauthParams, { baseUrl: 'http://accounts.lvh.me:8088' }));
+    let oauthOptions = Object.assign({}, oauthParams,
+        { tokenPath: '/tests/oauth-token-options', baseUrl: 'http://accounts.lvh.me:8088' });
+    let promise = client.useAdapter('auth', oauthOptions);
 
-    expect(client.auth.clientAuth()).to.eventually.be.rejectedWith(Error, /accounts.lvh.me/).notify(done);
+    expect(promise).to.eventually.eql({ host: 'accounts.lvh.me:8088' }).notify(done);
+  });
+
+  it('using custom fetch options', (done) => {
+    let client = new Bukalapak(options);
+    let oauthOptions = Object.assign({}, oauthParams,
+        { tokenPath: '/tests/oauth-token-options', headers: { 'Custom': 'hello!' } });
+    let promise = client.useAdapter('auth', oauthOptions);
+
+    expect(promise).to.eventually.eql({ host: 'localhost:8088', custom: 'hello!' }).notify(done);
   });
 });
 
