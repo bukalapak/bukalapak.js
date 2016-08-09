@@ -31,7 +31,7 @@ class Auth {
     this.options.fetchOptions = {};
 
     Object.keys(options).forEach((key) => {
-      if (this._validOptionKeys().includes(key)) {
+      if (this._validOptionKeys().indexOf(key) !== -1) {
         this.options[key] = options[key];
       } else {
         this.options.fetchOptions[key] = options[key];
