@@ -109,4 +109,4 @@ class Bukalapak {
   }
 }
 
-export default Bukalapak;
+module.exports = Bukalapak;
