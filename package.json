@@ -39,7 +39,7 @@
     "rimraf": "^2.5.2",
     "semistandard": "^7.0.5",
     "snazzy": "^3.0.0",
-    "webpack": "^1.14.0"
+    "webpack": "^2.2.0"
   },
   "standard": {
     "globals": [

@@ -3,11 +3,13 @@ module.exports = {
     bukalapak: "./src/bukalapak.js"
   },
   module: {
-    loaders: [
+    rules: [
       {
-        loader: "babel",
+        test: /\.js$/,
         exclude: /node_modules/,
-        test: /\.js$/
+        use: [
+          {loader: "babel-loader"}
+        ]
       }
     ]
   },
