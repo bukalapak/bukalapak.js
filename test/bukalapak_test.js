@@ -94,7 +94,7 @@ describe('Bukalapak', () => {
       let options = { baseUrl: 'http://localhost:8088', storage: localStorage };
       let client = new Bukalapak(options);
       let promise = client.get('/tests/methods').then((response) => {
-        return response.json();
+        return response;
       });
       expect(promise).to.eventually.have.deep.property('method', 'GET').notify(done);
     });
@@ -103,7 +103,7 @@ describe('Bukalapak', () => {
       let options = { baseUrl: 'http://localhost:8088/', storage: localStorage };
       let client = new Bukalapak(options);
       let promise = client.get('/tests/methods').then((response) => {
-        return response.json();
+        return response;
       });
       expect(promise).to.eventually.have.deep.property('method', 'GET').notify(done);
     });
@@ -123,28 +123,28 @@ describe('Bukalapak', () => {
 
     it('should auto set body for post request', (done) => {
       let promise = client.post('/tests/post-blank-data').then((response) => {
-        return response.json();
+        return response;
       });
       expect(promise).to.eventually.eql({ body: {} }).notify(done);
     });
 
     it('should able to perform delete request', (done) => {
       let promise = client.del('/tests/methods').then((response) => {
-        return response.json();
+        return response;
       });
       expect(promise).to.eventually.have.deep.property('method', 'DELETE').notify(done);
     });
 
     it('should able to perform options request', (done) => {
       let promise = client.opts('/tests/methods').then((response) => {
-        return response.json();
+        return response;
       });
       expect(promise).to.eventually.have.deep.property('method', 'OPTIONS').notify(done);
     });
 
     it('should handle not authorized error properly', () => {
       let promise = client.get('/tests/unauthorized').then((response) => {
-        return response.json();
+        return response;
       });
 
       return Promise.all([
@@ -157,7 +157,7 @@ describe('Bukalapak', () => {
     it('should be able to switch baseUrl', (done) => {
       let client = new Bukalapak({ baseUrl: 'http://api.lvh.me:8088', storage: localStorage });
       let promise = client.get('/tests/domain', { baseUrl: 'http://accounts.lvh.me:8088' }).then((response) => {
-        return response.json();
+        return response;
       });
       expect(promise).to.eventually.eql({ host: 'accounts.lvh.me:8088' }).notify(done);
     });
@@ -165,7 +165,7 @@ describe('Bukalapak', () => {
     it('should be able to set custom headers', () => {
       let options = { headers: { 'Accept': 'application/json', 'User-Agent': 'bukalapak.js//0.0.0' } };
       let promise = client.get('/tests/http-headers', options).then((response) => {
-        return response.json();
+        return response;
       });
 
       return Promise.all([
@@ -179,7 +179,7 @@ describe('Bukalapak', () => {
         it('should return error for invalid scope', () => {
           let httpPath = Util.oauthPath({ grant_type: 'client_credentials', scope: 'unkn0wn' });
           let promise = client.post(httpPath).then((response) => {
-            return response.json();
+            return response;
           });
 
           return Promise.all([
@@ -191,7 +191,7 @@ describe('Bukalapak', () => {
         it('should generate token for valid client credentials request', () => {
           let httpPath = Util.oauthPath({ grant_type: 'client_credentials', scope: 'public' });
           let promise = client.post(httpPath).then((response) => {
-            return response.json();
+            return response;
           });
 
           return Promise.all([
@@ -209,7 +209,7 @@ describe('Bukalapak', () => {
         it('should return error for missing username and password', () => {
           let httpPath = Util.oauthPath({ grant_type: 'password' });
           let promise = client.post(httpPath).then((response) => {
-            return response.json();
+            return response;
           });
 
           return Promise.all([
@@ -221,7 +221,7 @@ describe('Bukalapak', () => {
         it('should generate token for valid resource owner password credentials request', () => {
           let httpPath = Util.oauthPath({ grant_type: 'password', scope: 'public user', username: 'foo', password: 's3cr3t' });
           let promise = client.post(httpPath).then((response) => {
-            return response.json();
+            return response;
           });
 
           return Promise.all([
@@ -239,7 +239,7 @@ describe('Bukalapak', () => {
         it('should return error for missing refresh_token', () => {
           let httpPath = Util.oauthPath({ grant_type: 'refresh_token', access_token: 'abcdef' });
           let promise = client.post(httpPath).then((response) => {
-            return response.json();
+            return response;
           });
 
           return Promise.all([
@@ -251,7 +251,7 @@ describe('Bukalapak', () => {
         it('should generate token for valid refresh token request', () => {
           let httpPath = Util.oauthPath({ grant_type: 'refresh_token', scope: 'public user', access_token: 'abcdef', refresh_token: 'zxcv' });
           let promise = client.post(httpPath).then((response) => {
-            return response.json();
+            return response;
           });
 
           return Promise.all([

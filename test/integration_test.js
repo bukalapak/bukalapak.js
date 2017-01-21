@@ -47,7 +47,7 @@ describe('integration', () => {
   it('use api adapter (as client)', () => {
     client.useAdapter('api');
 
-    let promise = client.api.products().then((response) => { return response.json(); });
+    let promise = client.api.products();
 
     return Promise.all([
       expect(promise).to.eventually.have.property('data'),
@@ -70,7 +70,7 @@ describe('integration', () => {
   });
 
   it('use api adapter (as user)', () => {
-    let promise = client.api.me().then((response) => { return response.json(); });
+    let promise = client.api.me();
 
     return Promise.all([
       expect(promise).to.eventually.have.deep.property('data.username', 'subosito'),
@@ -101,7 +101,7 @@ describe('integration', () => {
 
     client.storage.setItem('access_token', clientToken);
 
-    let promise = client.api.products().then((response) => { return response.json(); });
+    let promise = client.api.products();
 
     return Promise.all([
       expect(promise).to.eventually.have.property('data'),

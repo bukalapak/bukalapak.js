@@ -36,7 +36,7 @@ describe('api', () => {
   describe('me()', () => {
     it('should return valid response', () => {
       let promise = client.api.me().then((response) => {
-        return response.json();
+        return response;
       });
 
       return Promise.all([
@@ -47,7 +47,7 @@ describe('api', () => {
 
     it('should return valid response with query', () => {
       let promise = client.api.me({ foo: 'bar' }).then((response) => {
-        return response.json();
+        return response;
       });
 
       return Promise.all([
@@ -58,7 +58,7 @@ describe('api', () => {
 
     it('should return valid response with query and custom headers', () => {
       let promise = client.api.me({ foo: 'bar' }, { headers: { 'Accept': 'application/json' } }).then((response) => {
-        return response.json();
+        return response;
       });
 
       return Promise.all([
