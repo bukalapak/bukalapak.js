@@ -152,7 +152,7 @@ class Auth {
   }
 
   _clientCredentialsBuilder () {
-    return Object.assign({}, this.options.toParams(), { grant_type: 'client_credentials', scope: 'public' });
+    return Object.assign({}, this.options.toParams(), { grant_type: 'client_credentials' });
   }
 
   _refreshTokenBuilder () {
