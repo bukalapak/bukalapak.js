@@ -52,12 +52,15 @@ class Auth {
 
     this.options.username = username;
     this.options.password = password;
-    return this.userAuth();
+
+    let authResponse = this.userAuth();
+    delete this.options.password;
+
+    return authResponse;
   }
 
   logout () {
     delete this.options.username;
-    delete this.options.password;
     return this.clientAuth();
   }
 
