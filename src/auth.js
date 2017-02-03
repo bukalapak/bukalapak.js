@@ -67,13 +67,12 @@ class Auth {
   }
 
   userAuth (password) {
-    return this._doRequest(this._authTokenUri(
-          {
-            grantFlow: 'password',
-            options: {
-              password: password
-            }
-          }));
+    return this._doRequest(this._authTokenUri({
+      grantFlow: 'password',
+      options: {
+        password: password
+      }
+    }));
   }
 
   refreshToken () {
