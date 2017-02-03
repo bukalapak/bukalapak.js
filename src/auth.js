@@ -62,14 +62,14 @@ class Auth {
 
   clientAuth () {
     return this._doRequest(this._authTokenUri({
-      tokenGrantFlow: 'client_credentials'
+      grantFlow: 'client_credentials'
     }));
   }
 
   userAuth (password) {
     return this._doRequest(this._authTokenUri(
           {
-            tokenGrantFlow: 'password',
+            grantFlow: 'password',
             options: {
               password: password
             }
@@ -78,7 +78,7 @@ class Auth {
 
   refreshToken () {
     return this._doRequest(this._authTokenUri({
-      tokenGrantFlow:'refresh_token'
+      grantFlow:'refresh_token'
     }));
   }
 
@@ -150,7 +150,7 @@ class Auth {
   }
 
   _authTokenBuilder (tokenGrant) {
-    switch (tokenGrant.tokenGrantFlow) {
+    switch (tokenGrant.grantFlow) {
       case 'client_credentials':
         return this._clientCredentialsBuilder();
       case 'refresh_token':
