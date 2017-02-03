@@ -20,10 +20,10 @@ class Auth {
           scope: this.scope
         };
       },
-      authPair () {
+      authPair (password) {
         return {
           username: this.username,
-          password: this.password
+          password: password
         };
       }
     };
@@ -51,12 +51,8 @@ class Auth {
     }
 
     this.options.username = username;
-    this.options.password = password;
 
-    let authResponse = this.userAuth();
-    delete this.options.password;
-
-    return authResponse;
+    return this.userAuth(password);
   }
 
   logout () {
@@ -65,15 +61,25 @@ class Auth {
   }
 
   clientAuth () {
-    return this._doRequest(this._authTokenUri('client_credentials'));
+    return this._doRequest(this._authTokenUri({
+      tokenGrantFlow: 'client_credentials'
+    }));
   }
 
-  userAuth () {
-    return this._doRequest(this._authTokenUri('password'));
+  userAuth (password) {
+    return this._doRequest(this._authTokenUri(
+          {
+            tokenGrantFlow: 'password',
+            options: {
+              password: password
+            }
+          }));
   }
 
   refreshToken () {
-    return this._doRequest(this._authTokenUri('refresh_token'));
+    return this._doRequest(this._authTokenUri({
+      tokenGrantFlow:'refresh_token'
+    }));
   }
 
   formatRequest (reqUrl, options) {
@@ -144,13 +150,13 @@ class Auth {
   }
 
   _authTokenBuilder (tokenGrant) {
-    switch (tokenGrant) {
+    switch (tokenGrant.tokenGrantFlow) {
       case 'client_credentials':
         return this._clientCredentialsBuilder();
       case 'refresh_token':
         return this._refreshTokenBuilder();
       case 'password':
-        return this._passwordBuilder();
+        return this._passwordBuilder(tokenGrant.options.password);
     }
   }
 
@@ -172,9 +178,11 @@ class Auth {
     });
   }
 
-  _passwordBuilder () {
-    this.options.validate(['username', 'password'], 'Unable to perform resource owner password credentials request');
-    return Object.assign({}, this.options.toParams(), this.options.authPair(), { grant_type: 'password' });
+  _passwordBuilder (password) {
+    if (isBlank(this.options.username) || isBlank(password)) {
+      throw new Error('Unable to perform resource owner password credentials request');
+    }
+    return Object.assign({}, this.options.toParams(), this.options.authPair(password), { grant_type: 'password' });
   }
 
   _validOptionKeys () {
