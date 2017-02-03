@@ -20,10 +20,10 @@ class Auth {
           scope: this.scope
         };
       },
-      authPair (password) {
+      authPair (grantOptions) {
         return {
           username: this.username,
-          password: password
+          password: grantOptions.password
         };
       }
     };
@@ -156,7 +156,7 @@ class Auth {
       case 'refresh_token':
         return this._refreshTokenBuilder();
       case 'password':
-        return this._passwordBuilder(tokenGrant.options.password);
+        return this._passwordBuilder(tokenGrant.options);
     }
   }
 
@@ -178,11 +178,11 @@ class Auth {
     });
   }
 
-  _passwordBuilder (password) {
-    if (isBlank(this.options.username) || isBlank(password)) {
+  _passwordBuilder (grantOptions) {
+    if (isBlank(this.options.username) || isBlank(grantOptions.password)) {
       throw new Error('Unable to perform resource owner password credentials request');
     }
-    return Object.assign({}, this.options.toParams(), this.options.authPair(password), { grant_type: 'password' });
+    return Object.assign({}, this.options.toParams(), this.options.authPair(grantOptions), { grant_type: 'password' });
   }
 
   _validOptionKeys () {
