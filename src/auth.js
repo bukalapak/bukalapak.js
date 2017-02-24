@@ -42,7 +42,15 @@ class Auth {
   }
 
   registerAdapter () {
-    return this.clientAuth();
+    let accessToken = this.client.storage.getItem('access_token');
+
+    if (isBlank(accessToken)) {
+      return this.clientAuth();
+    } else {
+      return new Promise((resolve, reject) => {
+        resolve(accessToken);
+      });
+    }
   }
 
   login (username, password) {
@@ -77,7 +85,7 @@ class Auth {
 
   refreshToken () {
     return this._doRequest(this._authTokenUri({
-      grantFlow:'refresh_token'
+      grantFlow: 'refresh_token'
     }));
   }
 
