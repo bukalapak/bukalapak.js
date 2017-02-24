@@ -1,3 +1,4 @@
+import { parse as urlParse} from 'url';
 import queryString from 'query-string';
 import { isBlank } from './util';
 
@@ -82,12 +83,24 @@ class Auth {
   }
 
   formatRequest (reqUrl, options) {
+    let appendTokenToUrl = (url, token) => {
+      let qs = urlParse(url).query;
+      let sep = isBlank(qs) ? '?' : '&';
+      return url + sep + `access_token=${token.access_token}`;
+    }
+
     let formatOptions = (token) => {
+      let url = reqUrl;
+
       if (!reqUrl.match('grant_type=')) {
-        options.headers['Authorization'] = `Bearer ${token.access_token}`;
+        if (options.method === 'GET') {
+          url = appendTokenToUrl(url, token);
+        } else {
+          options.headers['Authorization'] = `Bearer ${token.access_token}`;
+        }
       }
 
-      return options;
+      return { url, options };
     };
 
     return new Promise((resolve, reject) => {

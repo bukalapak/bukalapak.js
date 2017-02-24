@@ -107,17 +107,52 @@ describe('auth adapter: token', () => {
   });
 
   describe('client credentials', () => {
-    it('should attach client credentials token in request headers', (done) => {
-      let promise = client.get('/tests/request-token').then((response) => {
-        return response.json();
-      });
-      let wanted = {
-        accept: 'application/vnd.bukalapak.v4+json',
-        authorization: `Bearer ${validResponse.clientCredentials.access_token}`
-      };
+    describe('GET request', function (done) {
+      it('should attach client credentials token in request query string', function () {
+        let promise = client.get('/test/request-token').then((response) => {
+          return response.json();
+        });
+        let wanted = {
+          accept: 'application/vnd.bukalapak.v4+json',
+          query: {
+            access_token: validResponse.clientCredentials.access_token
+          }
+        };
 
-      expect(promise).to.eventually.eql(wanted).notify(done);
+        expect(promise).to.eventually.eql(wanted).notify(done);
+      });
+
+      it('should append client credentials token in request query string', function () {
+        let promise = client.get('/test/request-token?foo=bar').then((response) => {
+          return response.json();
+        });
+        let wanted = {
+          accept: 'application/vnd.bukalapak.v4+json',
+          query: {
+            foo: 'bar',
+            access_token: validResponse.clientCredentials.access_token
+          }
+        };
+
+        expect(promise).to.eventually.eql(wanted).notify(done);
+      });
     });
+
+    describe('POST request', function () {
+      it('should attach client credentials token in request headers', (done) => {
+        let promise = client.post('/tests/request-token').then((response) => {
+          return response.json();
+        });
+        let wanted = {
+          accept: 'application/vnd.bukalapak.v4+json',
+          authorization: `Bearer ${validResponse.clientCredentials.access_token}`,
+          params: {}
+        };
+
+        expect(promise).to.eventually.eql(wanted).notify(done);
+      });
+    });
+
   });
 
   describe('resource owner password', () => {
@@ -127,13 +162,15 @@ describe('auth adapter: token', () => {
       });
     });
 
-    it('should attach resource owner password token in request headers', (done) => {
+    it('should attach resource owner password token in query parameter', (done) => {
       let promise = client.get('/tests/request-token').then((response) => {
         return response.json();
       });
       let wanted = {
         accept: 'application/vnd.bukalapak.v4+json',
-        authorization: `Bearer ${validResponse.password.access_token}`
+        query: {
+          access_token: validResponse.password.access_token
+        }
       };
 
       expect(promise).to.eventually.eql(wanted).notify(done);
@@ -148,13 +185,15 @@ describe('auth adapter: token', () => {
       ]);
     });
 
-    it('should attach client credentials token in request headers', (done) => {
+    it('should attach client credentials token in request query string', (done) => {
       let promise = client.get('/tests/request-token').then((response) => {
         return response.json();
       });
       let wanted = {
         accept: 'application/vnd.bukalapak.v4+json',
-        authorization: `Bearer ${validResponse.clientCredentials.access_token}`
+        query: {
+          access_token: validResponse.clientCredentials.access_token
+        }
       };
 
       expect(promise).to.eventually.eql(wanted).notify(done);
@@ -191,13 +230,15 @@ describe('auth adapter: auto refresh token', () => {
       });
     });
 
-    it('should auto-refresh resource owner password token before attach it in request headers', (done) => {
+    it('should auto-refresh resource owner password token before attach it in request query string', (done) => {
       let promise = client.get('/tests/request-token').then((response) => {
         return response.json();
       });
       let wanted = {
         accept: 'application/vnd.bukalapak.v4+json',
-        authorization: `Bearer ${validResponse.refreshToken.access_token}`
+        query: {
+          access_token: validResponse.refreshToken.access_token
+        }
       };
 
       expect(promise).to.eventually.eql(wanted).notify(done);
@@ -235,7 +276,9 @@ describe('auth adapter: auto refresh token with client credentials token)', () =
 
       let wanted = {
         accept: 'application/vnd.bukalapak.v4+json',
-        authorization: `Bearer ${validResponse.clientCredentials.access_token}`
+        query: {
+          access_token: validResponse.clientCredentials.access_token
+        }
       };
 
       expect(promise).to.eventually.eql(wanted).notify(done);
