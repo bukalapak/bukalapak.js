@@ -65,6 +65,10 @@ describe('auth adapter: custom options', () => {
     server.close(done);
   });
 
+  beforeEach(() => {
+    localStorage.removeItem('access_token');
+  });
+
   it('using custom baseUrl', (done) => {
     let client = new Bukalapak(options);
     let oauthOptions = Object.assign({}, oauthParams,
@@ -97,6 +101,7 @@ describe('auth adapter: token', () => {
   });
 
   beforeEach((done) => {
+    localStorage.removeItem('access_token');
     client.useAdapter('auth', Object.assign({}, { tokenPath: '/tests/oauth-token' }, oauthParams)).then(() => {
       done();
     });
@@ -159,6 +164,29 @@ describe('auth adapter: token', () => {
 
       expect(promise).to.eventually.eql(wanted).notify(done);
     });
+  });
+});
+
+describe('auth adapter: get token from local storage', () => {
+  let server;
+  let oauthOptions = Object.assign({}, oauthParams,
+      { tokenPath: '/tests/oauth-token' });
+
+  before((done) => {
+    localStorage.removeItem('access_token');
+    server = app.listen({ port: 8088 }, done);
+  });
+
+  after((done) => {
+    server.close(done);
+  });
+
+  it('does not request new access token when it is already in local storage', (done) => {
+    localStorage.setItem('access_token', {dummy_token: '482c2ce503090f3b3b74a388349ebfb515a7885faf0faa777e48a40ee3ebe8bc'});
+    let client = new Bukalapak(options);
+    let promise = client.useAdapter('auth', oauthOptions);
+
+    expect(promise).to.eventually.eql(localStorage.getItem('access_token')).notify(done);
   });
 });
 
