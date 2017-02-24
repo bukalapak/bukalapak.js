@@ -152,7 +152,6 @@ describe('auth adapter: token', () => {
         expect(promise).to.eventually.eql(wanted).notify(done);
       });
     });
-
   });
 
   describe('resource owner password', () => {

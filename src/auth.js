@@ -1,4 +1,4 @@
-import { parse as urlParse} from 'url';
+import { parse as urlParse } from 'url';
 import queryString from 'query-string';
 import { isBlank } from './util';
 
@@ -78,7 +78,7 @@ class Auth {
 
   refreshToken () {
     return this._doRequest(this._authTokenUri({
-      grantFlow:'refresh_token'
+      grantFlow: 'refresh_token'
     }));
   }
 
@@ -87,7 +87,7 @@ class Auth {
       let qs = urlParse(url).query;
       let sep = isBlank(qs) ? '?' : '&';
       return url + sep + `access_token=${token.access_token}`;
-    }
+    };
 
     let formatOptions = (token) => {
       let url = reqUrl;
