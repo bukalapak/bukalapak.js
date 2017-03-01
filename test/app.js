@@ -87,7 +87,7 @@ app.get('/tests/http-headers', (req, res, next) => {
 
 app.route('/tests/request-token')
   .get((req, res, next) => {
-    res.status(200).json({ accept: req.headers.accept, query: req.query });
+    res.status(200).json({ accept: req.headers.accept, authorization: req.headers.authorization, query: req.query });
   })
   .post((req, res, next) => {
     res.status(200).json({ accept: req.headers.accept, authorization: req.headers.authorization, params: req.params });

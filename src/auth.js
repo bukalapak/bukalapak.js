@@ -26,7 +26,8 @@ class Auth {
           username: this.username,
           password: grantOptions.password
         };
-      }
+      },
+      accessTokenParam: false
     };
 
     this.options.fetchOptions = {};
@@ -93,7 +94,7 @@ class Auth {
       let url = reqUrl;
 
       if (!reqUrl.match('grant_type=')) {
-        if (options.method === 'GET') {
+        if (this.options.accessTokenParam) {
           url = appendTokenToUrl(url, token);
         } else {
           options.headers['Authorization'] = `Bearer ${token.access_token}`;
@@ -198,7 +199,7 @@ class Auth {
   }
 
   _validOptionKeys () {
-    return ['clientId', 'clientSecret', 'username', 'password', 'scope', 'tokenPath', 'baseUrl'];
+    return ['clientId', 'clientSecret', 'username', 'password', 'scope', 'tokenPath', 'baseUrl', 'accessTokenParam'];
   }
 
   _token_path () {
