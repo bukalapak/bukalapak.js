@@ -44,7 +44,15 @@ class Auth {
   }
 
   registerAdapter () {
-    return this.clientAuth();
+    let accessToken = this.client.storage.getItem('access_token');
+
+    if (isBlank(accessToken)) {
+      return this.clientAuth();
+    } else {
+      return new Promise((resolve, reject) => {
+        resolve(accessToken);
+      });
+    }
   }
 
   login (username, password) {
