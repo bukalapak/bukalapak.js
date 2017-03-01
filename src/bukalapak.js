@@ -64,10 +64,10 @@ class Bukalapak {
       // enhance this later...
       if (this.auth) {
         return this.auth.formatRequest(reqUrl, opts).then((options) => {
-          return this._fetch(reqUrl, options);
+          return this._fetch(reqUrl, options).then(this._handlePreflight);
         });
       } else {
-        return this._fetch(reqUrl, opts);
+        return this._fetch(reqUrl, opts).then(this._handlePreflight);
       }
     };
   }
@@ -106,6 +106,20 @@ class Bukalapak {
     }
 
     return baseUrl;
+  }
+
+  // return real response when request is preflighted
+  // what is preflight? read these
+  // http://damon.ghost.io/killing-cors-preflight-requests-on-a-react-spa/
+  // https://remysharp.com/2011/04/21/getting-cors-working
+  _handlePreflight (response) {
+    if (!isUndefined(response.json)) {
+      return response.json();
+    } else {
+      return new Promise((resolve) => {
+        resolve(response);
+      });
+    }
   }
 }
 

@@ -140,9 +140,6 @@ class Auth {
         { baseUrl: this.options.baseUrl || this.client.options.baseUrl });
 
     return this.client.post(uri, fetchOptions)
-      .then((response) => {
-        return response.json();
-      })
       .then((data) => {
         this.client.storage.setItem('access_token', data); return data;
       });

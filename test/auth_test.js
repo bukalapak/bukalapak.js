@@ -114,7 +114,7 @@ describe('auth adapter: token', () => {
   describe('client credentials', () => {
     it('should attach client credentials token in request headers', (done) => {
       let promise = client.get('/tests/request-token').then((response) => {
-        return response.json();
+        return response;
       });
       let wanted = {
         accept: 'application/vnd.bukalapak.v4+json',
@@ -134,7 +134,7 @@ describe('auth adapter: token', () => {
 
     it('should attach resource owner password token in request headers', (done) => {
       let promise = client.get('/tests/request-token').then((response) => {
-        return response.json();
+        return response;
       });
       let wanted = {
         accept: 'application/vnd.bukalapak.v4+json',
@@ -155,7 +155,7 @@ describe('auth adapter: token', () => {
 
     it('should attach client credentials token in request headers', (done) => {
       let promise = client.get('/tests/request-token').then((response) => {
-        return response.json();
+        return response;
       });
       let wanted = {
         accept: 'application/vnd.bukalapak.v4+json',
@@ -221,7 +221,7 @@ describe('auth adapter: auto refresh token', () => {
 
     it('should auto-refresh resource owner password token before attach it in request headers', (done) => {
       let promise = client.get('/tests/request-token').then((response) => {
-        return response.json();
+        return response;
       });
       let wanted = {
         accept: 'application/vnd.bukalapak.v4+json',
@@ -258,7 +258,7 @@ describe('auth adapter: auto refresh token with client credentials token)', () =
   describe('resource owner password', () => {
     it('should not auto-refresh client credentials token', (done) => {
       let promise = client.get('/tests/request-token').then((response) => {
-        return response.json();
+        return response;
       });
 
       let wanted = {
