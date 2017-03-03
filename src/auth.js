@@ -1,3 +1,4 @@
+import { parse as urlParse } from 'url';
 import queryString from 'query-string';
 import { isBlank } from './util';
 
@@ -25,7 +26,8 @@ class Auth {
           username: this.username,
           password: grantOptions.password
         };
-      }
+      },
+      accessTokenParam: false
     };
 
     this.options.fetchOptions = {};
@@ -90,12 +92,24 @@ class Auth {
   }
 
   formatRequest (reqUrl, options) {
+    let appendTokenToUrl = (url, token) => {
+      let qs = urlParse(url).query;
+      let sep = isBlank(qs) ? '?' : '&';
+      return url + sep + `access_token=${token.access_token}`;
+    };
+
     let formatOptions = (token) => {
+      let url = reqUrl;
+
       if (!reqUrl.match('grant_type=')) {
-        options.headers['Authorization'] = `Bearer ${token.access_token}`;
+        if (this.options.accessTokenParam) {
+          url = appendTokenToUrl(url, token);
+        } else {
+          options.headers['Authorization'] = `Bearer ${token.access_token}`;
+        }
       }
 
-      return options;
+      return { url, options };
     };
 
     return new Promise((resolve, reject) => {
@@ -193,7 +207,7 @@ class Auth {
   }
 
   _validOptionKeys () {
-    return ['clientId', 'clientSecret', 'username', 'password', 'scope', 'tokenPath', 'baseUrl'];
+    return ['clientId', 'clientSecret', 'username', 'password', 'scope', 'tokenPath', 'baseUrl', 'accessTokenParam'];
   }
 
   _token_path () {

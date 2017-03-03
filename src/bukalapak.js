@@ -63,8 +63,8 @@ class Bukalapak {
 
       // enhance this later...
       if (this.auth) {
-        return this.auth.formatRequest(reqUrl, opts).then((options) => {
-          return this._fetch(reqUrl, options);
+        return this.auth.formatRequest(reqUrl, opts).then(({ url, options }) => {
+          return this._fetch(url, options);
         });
       } else {
         return this._fetch(reqUrl, opts);

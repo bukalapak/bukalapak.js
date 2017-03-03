@@ -118,7 +118,8 @@ describe('auth adapter: token', () => {
       });
       let wanted = {
         accept: 'application/vnd.bukalapak.v4+json',
-        authorization: `Bearer ${validResponse.clientCredentials.access_token}`
+        authorization: `Bearer ${validResponse.clientCredentials.access_token}`,
+        query: {}
       };
 
       expect(promise).to.eventually.eql(wanted).notify(done);
@@ -138,7 +139,8 @@ describe('auth adapter: token', () => {
       });
       let wanted = {
         accept: 'application/vnd.bukalapak.v4+json',
-        authorization: `Bearer ${validResponse.password.access_token}`
+        authorization: `Bearer ${validResponse.password.access_token}`,
+        query: {}
       };
 
       expect(promise).to.eventually.eql(wanted).notify(done);
@@ -159,7 +161,8 @@ describe('auth adapter: token', () => {
       });
       let wanted = {
         accept: 'application/vnd.bukalapak.v4+json',
-        authorization: `Bearer ${validResponse.clientCredentials.access_token}`
+        authorization: `Bearer ${validResponse.clientCredentials.access_token}`,
+        query: {}
       };
 
       expect(promise).to.eventually.eql(wanted).notify(done);
@@ -225,7 +228,8 @@ describe('auth adapter: auto refresh token', () => {
       });
       let wanted = {
         accept: 'application/vnd.bukalapak.v4+json',
-        authorization: `Bearer ${validResponse.refreshToken.access_token}`
+        authorization: `Bearer ${validResponse.refreshToken.access_token}`,
+        query: {}
       };
 
       expect(promise).to.eventually.eql(wanted).notify(done);
@@ -263,10 +267,63 @@ describe('auth adapter: auto refresh token with client credentials token)', () =
 
       let wanted = {
         accept: 'application/vnd.bukalapak.v4+json',
-        authorization: `Bearer ${validResponse.clientCredentials.access_token}`
+        authorization: `Bearer ${validResponse.clientCredentials.access_token}`,
+        query: {}
       };
 
       expect(promise).to.eventually.eql(wanted).notify(done);
     });
+  });
+});
+
+describe('auth adapter: use accessTokenParam option', function () {
+  let client = new Bukalapak(options);
+  let server;
+
+  before((done) => {
+    server = app.listen({ port: 8088 }, done);
+  });
+
+  after((done) => {
+    server.close(done);
+  });
+
+  beforeEach((done) => {
+    client.useAdapter('auth', Object.assign({}, oauthParams, { tokenPath: '/tests/oauth-token', accessTokenParam: true })).then(() => {
+      done();
+    });
+  });
+
+  afterEach(() => {
+    return Promise.all([ localStorage.removeItem('access_token') ]);
+  });
+
+  it('should attach access_token to query string', function (done) {
+    let promise = client.get('/tests/request-token').then((response) => {
+      return response.json();
+    });
+    let wanted = {
+      accept: 'application/vnd.bukalapak.v4+json',
+      query: {
+        access_token: validResponse.clientCredentials.access_token
+      }
+    };
+
+    expect(promise).to.eventually.eql(wanted).notify(done);
+  });
+
+  it('should append access_token to already existed query string', function (done) {
+    let promise = client.get('/tests/request-token?foo=bar').then((response) => {
+      return response.json();
+    });
+    let wanted = {
+      accept: 'application/vnd.bukalapak.v4+json',
+      query: {
+        access_token: validResponse.clientCredentials.access_token,
+        foo: 'bar'
+      }
+    };
+
+    expect(promise).to.eventually.eql(wanted).notify(done);
   });
 });
